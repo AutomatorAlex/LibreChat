@@ -1,0 +1,27 @@
+    version: 1.2.1 # Or your current LibreChat config version
+
+    # Include any other general configurations you need at the top level.
+    # For example, if you had `cache: true` or `interface` settings.
+
+    endpoints:
+      custom:
+        - name: 'OpenRouter'
+          apiKey: '${OPENROUTER_KEY}' # This will use your Render env var for OPENROUTER_KEY
+          baseURL: 'https://openrouter.ai/api/v1'
+          models:
+            fetch: false # Crucial for manually listing the :online model
+            default:
+              - 'google/gemini-2.5-pro-preview:online'
+              # If you use other OpenRouter models, list them here as well:
+              # - 'meta-llama/llama-3-70b-instruct'
+          titleConvo: true
+          titleModel: 'google/gemini-2.5-pro-preview' # Or 'google/gemini-2.5-pro-preview:online'
+          dropParams: ['stop'] # Recommended for OpenRouter
+          modelDisplayLabel: 'OpenRouter' # Label shown in the UI
+          # Optional: if you want to override default LibreChat headers for OpenRouter
+          # headers:
+          #   "HTTP-Referer": "<YOUR_SITE_URL>" # Replace with your actual site URL
+          #   "X-Title": "<YOUR_SITE_NAME>"    # Replace with your actual site name
+
+    # Add any other endpoint configurations (like OpenAI, Anthropic, etc.) if you use them.
+    # Ensure the YAML formatting (indentation) is correct.
