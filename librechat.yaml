@@ -66,10 +66,8 @@ actions:
 # MCP Servers
 mcpServers:
   smithery-sequential-thinking: # New name for this server entry
-    type: sse # Explicitly set type to sse
-    url: "https://server.smithery.ai/@smithery-ai/server-sequential-thinking/mcp"
-    headers:
-      "x-api-key": "2889e4fc-ae4b-47c1-b2df-cdcfb187485c" # Using a common API key header format
+    type: websocket # Changed to websocket as per Smithery hosting docs
+    url: "wss://server.smithery.ai/@smithery-ai/server-sequential-thinking/mcp?profile=delightful-hyena-GSmzOH&api_key=2889e4fc-ae4b-47c1-b2df-cdcfb187485c" # Changed to wss://, kept profile & api_key params
     timeout: 90000
 
 # Definition of custom endpoints
