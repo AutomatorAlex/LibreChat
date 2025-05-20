@@ -63,45 +63,18 @@ actions:
     - "librechat.ai"
     - "google.com"
 
-# Example MCP Servers Object Structure
-# mcpServers:
-#   everything:
-#     # type: sse # type can optionally be omitted
-#     url: http://localhost:3001/sse
-#     timeout: 60000  # 1 minute timeout for this server, this is the default timeout for MCP servers.
-#   puppeteer:
-#     type: stdio
-#     command: npx
-#     args:
-#       - -y
-#       - "@modelcontextprotocol/server-puppeteer"
-#     timeout: 300000  # 5 minutes timeout for this server
-#   filesystem:
-#     # type: stdio
-#     command: npx
-#     args:
-#       - -y
-#       - "@modelcontextprotocol/server-filesystem"
-#       - /home/user/LibreChat/
-#     iconPath: /home/user/LibreChat/client/public/assets/logo.svg
-#   mcp-obsidian:
-#     command: npx
-#     args:
-#       - -y
-#       - "mcp-obsidian"
-#       - /path/to/obsidian/vault
-
-# Reverting to Smithery AI server with --config approach
-smithery-sequential-thinking: # New name for this server entry
-  type: stdio
-  command: sh # For Render's Alpine Linux
-  args:
-    - -c
-    # Use smithery/cli to run the server, passing API key via --config
-    - > # YAML folded style for readability
-      npx -y "@smithery/cli@latest" run "@smithery-ai/server-sequential-thinking" \
-      --config "{\"key\":\"${SMITHERY_API_KEY}\"}"
-  timeout: 90000 # 90 seconds timeout
+# MCP Servers
+mcpServers:
+  smithery-sequential-thinking: # New name for this server entry
+    type: stdio
+    command: sh # For Render's Alpine Linux
+    args:
+      - -c
+      # Use smithery/cli to run the server, passing API key via --config
+      - > # YAML folded style for readability
+        npx -y "@smithery/cli@latest" run "@smithery-ai/server-sequential-thinking" \
+        --config "{\"key\":\"${SMITHERY_API_KEY}\"}"
+    timeout: 90000 # 90 seconds timeout
 
 # Definition of custom endpoints
 # customEndpoints:
