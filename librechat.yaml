@@ -66,9 +66,10 @@ actions:
 # MCP Servers
 mcpServers:
   smithery-sequential-thinking: # New name for this server entry
-    # type: sse # Temporarily omitted in last attempt, let's put it back or leave it omitted based on what LibreChat prefers for URL based MCP
-    # For now, let's assume omitting type is fine if url is provided, as per earlier logs
-    url: "https://server.smithery.ai/@smithery-ai/server-sequential-thinking/mcp?api_key=2889e4fc-ae4b-47c1-b2df-cdcfb187485c" # Hardcoding API key since environment variable substitution isn't working
+    type: sse # Explicitly set type to sse
+    url: "https://server.smithery.ai/@smithery-ai/server-sequential-thinking/mcp"
+    headers:
+      "x-api-key": "2889e4fc-ae4b-47c1-b2df-cdcfb187485c" # Using a common API key header format
     timeout: 90000
 
 # Definition of custom endpoints
