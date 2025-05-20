@@ -12,6 +12,8 @@
             fetch: false # Crucial for manually listing the :online model
             default:
               - 'google/gemini-2.5-pro-preview:online'
+              - 'anthropic/claude-3.7-sonnet:thinking'
+              - 'openai/gpt-4.1'
               # If you use other OpenRouter models, list them here as well:
               # - 'meta-llama/llama-3-70b-instruct'
           titleConvo: true
@@ -22,6 +24,18 @@
           # headers:
           #   "HTTP-Referer": "<YOUR_SITE_URL>" # Replace with your actual site URL
           #   "X-Title": "<YOUR_SITE_NAME>"    # Replace with your actual site name
+
+      # New OpenAI endpoint configuration
+      openAI:
+        apiKey: '${OPENAI_API_KEY}' # You will need to set this env var in Render
+        # baseURL: "https://api.openai.com/v1" # This is the default, usually not needed unless using a proxy
+        models:
+          fetch: false # To ensure only your specified model is listed for this endpoint
+          default:
+            - "gpt-image-1" # Your desired image model
+        titleConvo: true
+        titleModel: "gpt-image-1" # Or a cheaper/faster text model if preferred for titles
+        modelDisplayLabel: "OpenAI Images" # Or just "OpenAI"
 
     # Add any other endpoint configurations (like OpenAI, Anthropic, etc.) if you use them.
     # Ensure the YAML formatting (indentation) is correct.
