@@ -66,14 +66,9 @@ actions:
 # MCP Servers
 mcpServers:
   smithery-sequential-thinking: # New name for this server entry
-    type: stdio
-    command: sh # For Render's Alpine Linux
-    args:
-      - -c
-      # Use smithery/cli to run the server, passing API key via --config
-      - > # YAML folded style for readability
-        npx -y "@smithery/cli@latest" run "@smithery-ai/server-sequential-thinking" --config "{\"key\":\"${SMITHERY_API_KEY}\"}"
-    timeout: 90000 # 90 seconds timeout
+    type: sse # Changed from stdio
+    url: "https://server.smithery.ai/@smithery-ai/server-sequential-thinking/mcp?api_key=${SMITHERY_API_KEY}"
+    timeout: 90000 # 90 seconds timeout (can be adjusted if needed)
 
 # Definition of custom endpoints
 # customEndpoints:
