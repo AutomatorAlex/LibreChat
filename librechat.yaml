@@ -92,11 +92,13 @@ actions:
 #       - /path/to/obsidian/vault
 
 mcpServers:
-  sequential-thinking-mcp: # New name for this server entry
+  sequential-thinking-mcp: # Name for this server entry
     type: stdio
-    command: mcp-sequential-thinking  # Assumed command after global install
-    args: []                         # Arguments should not be needed if it's a direct command
-    timeout: 90000 # Keep the increased timeout for now
+    command: npx  # Revert to npx
+    args:
+      - -y
+      - "@modelcontextprotocol/server-sequential-thinking"
+    timeout: 90000 # Keep the increased timeout
     # You can optionally add a timeout here if needed, e.g.:
     # timeout: 60000 # 60 seconds
 
