@@ -97,8 +97,10 @@ mcpServers:
     command: sh                # Changed from cmd to sh for Linux/Alpine
     args:
       - -c
-      # Echo the command first, then execute it
-      - "echo \"Executing: npx -y \\\"@smithery/cli@latest\\\" run \\\"@smithery-ai/server-sequential-thinking\\\" --key \\\"${SMITHERY_API_KEY}\\\"\" && npx -y \"@smithery/cli@latest\" run \"@smithery-ai/server-sequential-thinking\" --key \"${SMITHERY_API_KEY}\""
+      # Simpler command: Run npx without the --key argument.
+      # We hope @smithery/cli or @smithery-ai/server-sequential-thinking
+      # will pick up SMITHERY_API_KEY from the environment directly.
+      - "npx -y \"@smithery/cli@latest\" run \"@smithery-ai/server-sequential-thinking\""
     # You can optionally add a timeout here if needed, e.g.:
     # timeout: 60000 # 60 seconds
 
