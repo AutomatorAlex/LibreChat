@@ -451,6 +451,8 @@ export class MCPManager {
         );
       }
 
+      this.logger.info(`${logPrefix}[${toolName}] toolArguments before connection.client.request: ${JSON.stringify(toolArguments)}, type of thoughtNumber: ${typeof toolArguments?.thoughtNumber}`);
+
       const result = await connection.client.request(
         {
           method: 'tools/call',
