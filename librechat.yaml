@@ -55,3 +55,58 @@ fileConfig:
 
 # ... any other configurations at the end of your file ...
 # Ensure there's a newline at the end of the file if it's the last thing.
+
+# Example Actions Object Structure
+actions:
+  allowedDomains:
+    - "swapi.dev"
+    - "librechat.ai"
+    - "google.com"
+
+# Example MCP Servers Object Structure
+# mcpServers:
+#   everything:
+#     # type: sse # type can optionally be omitted
+#     url: http://localhost:3001/sse
+#     timeout: 60000  # 1 minute timeout for this server, this is the default timeout for MCP servers.
+#   puppeteer:
+#     type: stdio
+#     command: npx
+#     args:
+#       - -y
+#       - "@modelcontextprotocol/server-puppeteer"
+#     timeout: 300000  # 5 minutes timeout for this server
+#   filesystem:
+#     # type: stdio
+#     command: npx
+#     args:
+#       - -y
+#       - "@modelcontextprotocol/server-filesystem"
+#       - /home/user/LibreChat/
+#     iconPath: /home/user/LibreChat/client/public/assets/logo.svg
+#   mcp-obsidian:
+#     command: npx
+#     args:
+#       - -y
+#       - "mcp-obsidian"
+#       - /path/to/obsidian/vault
+
+mcpServers:
+  server-sequential-thinking: # This is your chosen name for this server instance
+    type: stdio                 # Specifies that it's launched via a command
+    command: cmd                # The command to run
+    args:                       # Arguments for the command
+      - /c
+      - npx
+      - -y
+      - "@smithery/cli@latest"
+      - run
+      - "@smithery-ai/server-sequential-thinking"
+      - --key
+      - "${SMITHERY_API_KEY}" # Your API key replaced with env variable
+    # You can optionally add a timeout here if needed, e.g.:
+    # timeout: 60000 # 60 seconds
+
+# Definition of custom endpoints
+customEndpoints:
+  - name: "openAI"
