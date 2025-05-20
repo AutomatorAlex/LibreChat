@@ -72,8 +72,7 @@ mcpServers:
       - -c
       # Use smithery/cli to run the server, passing API key via --config
       - > # YAML folded style for readability
-        npx -y "@smithery/cli@latest" run "@smithery-ai/server-sequential-thinking" \
-        --config "{\"key\":\"${SMITHERY_API_KEY}\"}"
+        npx -y "@smithery/cli@latest" run "@smithery-ai/server-sequential-thinking" --config "{\"key\":\"${SMITHERY_API_KEY}\"}"
     timeout: 90000 # 90 seconds timeout
 
 # Definition of custom endpoints
