@@ -17,7 +17,7 @@ endpoints:
           # If you use other OpenRouter models, list them here as well:
           # - 'meta-llama/llama-3-70b-instruct'
       titleConvo: true
-      titleModel: 'google/gemini-2.5-pro-preview' # Or 'google/gemini-2.5-pro-preview:online'
+      titleModel: 'openai/gpt-4.1-nano'
       dropParams:
         - 'stop'
       modelDisplayLabel: 'OpenRouter'

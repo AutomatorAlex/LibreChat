@@ -451,6 +451,22 @@ export class MCPManager {
         );
       }
 
+      // Coerce thoughtNumber and totalThoughts to numbers if they are strings for smithery-sequential-thinking
+      if (serverName === 'smithery-sequential-thinking' && toolName === 'sequentialthinking' && toolArguments) {
+        if (typeof toolArguments.thoughtNumber === 'string') {
+          const num = parseInt(toolArguments.thoughtNumber, 10);
+          if (!isNaN(num)) {
+            toolArguments.thoughtNumber = num;
+          }
+        }
+        if (typeof toolArguments.totalThoughts === 'string') {
+          const num = parseInt(toolArguments.totalThoughts, 10);
+          if (!isNaN(num)) {
+            toolArguments.totalThoughts = num;
+          }
+        }
+      }
+
       this.logger.info(`${logPrefix}[${toolName}] toolArguments before connection.client.request: ${JSON.stringify(toolArguments)}, type of thoughtNumber: ${typeof toolArguments?.thoughtNumber}`);
 
       const result = await connection.client.request(
