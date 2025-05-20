@@ -94,16 +94,11 @@ actions:
 mcpServers:
   server-sequential-thinking: # This is your chosen name for this server instance
     type: stdio                 # Specifies that it's launched via a command
-    command: cmd                # The command to run
+    command: sh                # Changed from cmd to sh for Linux/Alpine
     args:                       # Arguments for the command
-      - /c
-      - npx
-      - -y
-      - "@smithery/cli@latest"
-      - run
-      - "@smithery-ai/server-sequential-thinking"
-      - --key
-      - "${SMITHERY_API_KEY}" # Your API key replaced with env variable
+      - -c        # Changed from /c for sh
+      # The entire npx command becomes a single string argument for sh -c
+      - "npx -y \"@smithery/cli@latest\" run \"@smithery-ai/server-sequential-thinking\" --key \"${SMITHERY_API_KEY}\""
     # You can optionally add a timeout here if needed, e.g.:
     # timeout: 60000 # 60 seconds
 
