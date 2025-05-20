@@ -94,10 +94,9 @@ actions:
 mcpServers:
   sequential-thinking-mcp: # New name for this server entry
     type: stdio
-    command: npx  # Direct command
-    args:
-      - -y
-      - "@modelcontextprotocol/server-sequential-thinking"
+    command: mcp-sequential-thinking  # Assumed command after global install
+    args: []                         # Arguments should not be needed if it's a direct command
+    timeout: 90000 # Keep the increased timeout for now
     # You can optionally add a timeout here if needed, e.g.:
     # timeout: 60000 # 60 seconds
 
