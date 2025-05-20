@@ -14,9 +14,6 @@ ENV LD_PRELOAD=/usr/lib/libjemalloc.so.2
 COPY --from=ghcr.io/astral-sh/uv:0.6.13 /uv /uvx /bin/
 RUN uv --version
 
-# Install the MCP server package globally
-RUN npm install -g @modelcontextprotocol/server-sequential-thinking
-
 RUN mkdir -p /app && chown node:node /app
 WORKDIR /app
 

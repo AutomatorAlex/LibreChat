@@ -91,16 +91,17 @@ actions:
 #       - "mcp-obsidian"
 #       - /path/to/obsidian/vault
 
-mcpServers:
-  sequential-thinking-mcp: # Name for this server entry
-    type: stdio
-    command: npx  # Revert to npx
-    args:
-      - -y
-      - "@modelcontextprotocol/server-sequential-thinking"
-    timeout: 90000 # Keep the increased timeout
-    # You can optionally add a timeout here if needed, e.g.:
-    # timeout: 60000 # 60 seconds
+# Reverting to Smithery AI server with --config approach
+smithery-sequential-thinking: # New name for this server entry
+  type: stdio
+  command: sh # For Render's Alpine Linux
+  args:
+    - -c
+    # Use smithery/cli to run the server, passing API key via --config
+    - > # YAML folded style for readability
+      npx -y "@smithery/cli@latest" run "@smithery-ai/server-sequential-thinking" \
+      --config "{\"key\":\"${SMITHERY_API_KEY}\"}"
+  timeout: 90000 # 90 seconds timeout
 
 # Definition of custom endpoints
 # customEndpoints:
