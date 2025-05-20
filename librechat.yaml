@@ -21,6 +21,8 @@ endpoints:
       dropParams:
         - 'stop'
       modelDisplayLabel: 'OpenRouter'
+      agents:
+        code: true # Enables the Code Interpreter for this OpenRouter endpoint
     # Example for an OpenAI endpoint, if you were adding one directly (not via OpenRouter)
   openAI: # This is a system-level endpoint key
     # If you have multiple OpenAI accounts or want to label them
@@ -39,6 +41,10 @@ endpoints:
     titleModel: 'gpt-3.5-turbo' # Or any model suitable for titles
     # modelDisplayLabel: 'OpenAI' # Optional display label
     # iconURL: '/assets/openai.png' # Optional custom icon
+    agents:
+      code: true # Enables the Code Interpreter globally for this endpoint
+      # You can add other agent-related capabilities here if needed in the future
+      # e.g., tools: ['Tool1', 'Tool2']
 
 # This should be a top-level key, at the same indentation as 'version' and 'endpoints'
 fileConfig:
