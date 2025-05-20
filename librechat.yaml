@@ -108,5 +108,5 @@ mcpServers:
     # timeout: 60000 # 60 seconds
 
 # Definition of custom endpoints
-customEndpoints:
-  - name: "openAI"
+# customEndpoints:
+#   - name: "openAI"
