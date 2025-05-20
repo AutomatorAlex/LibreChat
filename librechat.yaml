@@ -66,9 +66,9 @@ actions:
 # MCP Servers
 mcpServers:
   smithery-sequential-thinking: # New name for this server entry
-    type: sse # Changed from stdio
-    url: "https://server.smithery.ai/@smithery-ai/server-sequential-thinking/mcp?api_key=${SMITHERY_API_KEY}"
-    timeout: 90000 # 90 seconds timeout (can be adjusted if needed)
+    type: sse
+    url: "https://server.smithery.ai/@smithery-ai/server-sequential-thinking/mcp?api_key=2889e4fc-ae4b-47c1-b2df-cdcfb187485c" # Temporarily hardcoded API key
+    timeout: 90000
 
 # Definition of custom endpoints
 # customEndpoints:
