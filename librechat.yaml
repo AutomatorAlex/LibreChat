@@ -1,41 +1,57 @@
-    version: 1.2.1 # Or your current LibreChat config version
+version: 1.2.1 # Or your current LibreChat config version
 
-    # Include any other general configurations you need at the top level.
-    # For example, if you had `cache: true` or `interface` settings.
+# Include any other general configurations you need at the top level.
+# For example, if you had `cache: true` or `interface` settings.
 
-    endpoints:
-      custom:
-        - name: 'OpenRouter'
-          apiKey: '${OPENROUTER_KEY}' # This will use your Render env var for OPENROUTER_KEY
-          baseURL: 'https://openrouter.ai/api/v1'
-          models:
-            fetch: false # Crucial for manually listing the :online model
-            default:
-              - 'google/gemini-2.5-pro-preview:online'
-              - 'anthropic/claude-3.7-sonnet:thinking'
-              - 'openai/gpt-4.1'
-              # If you use other OpenRouter models, list them here as well:
-              # - 'meta-llama/llama-3-70b-instruct'
-          titleConvo: true
-          titleModel: 'google/gemini-2.5-pro-preview' # Or 'google/gemini-2.5-pro-preview:online'
-          dropParams: ['stop'] # Recommended for OpenRouter
-          modelDisplayLabel: 'OpenRouter' # Label shown in the UI
-          # Optional: if you want to override default LibreChat headers for OpenRouter
-          # headers:
-          #   "HTTP-Referer": "<YOUR_SITE_URL>" # Replace with your actual site URL
-          #   "X-Title": "<YOUR_SITE_NAME>"    # Replace with your actual site name
+endpoints:
+  custom:
+    - name: 'OpenRouter'
+      apiKey: '${OPENROUTER_KEY}' # This will use your Render env var for OPENROUTER_KEY
+      baseURL: 'https://openrouter.ai/api/v1'
+      models:
+        fetch: false # Crucial for manually listing the :online model
+        default:
+          - 'google/gemini-2.5-pro-preview:online'
+          - 'anthropic/claude-3.7-sonnet:thinking'
+          - 'openai/gpt-4.1'
+          # If you use other OpenRouter models, list them here as well:
+          # - 'meta-llama/llama-3-70b-instruct'
+      titleConvo: true
+      titleModel: 'google/gemini-2.5-pro-preview' # Or 'google/gemini-2.5-pro-preview:online'
+      dropParams:
+        - 'stop'
+      modelDisplayLabel: 'OpenRouter'
+    # Example for an OpenAI endpoint, if you were adding one directly (not via OpenRouter)
+  openAI: # This is a system-level endpoint key
+    # If you have multiple OpenAI accounts or want to label them
+    # - name: 'My Personal OpenAI'
+    apiKey: '${OPENAI_API_KEY}' # Will use OPENAI_API_KEY from Render env vars
+    # organization: '${OPENAI_ORGANIZATION}' # Optional
+    # baseURL: 'https://api.openai.com/v1' # Default, can be overridden for proxies
+    models:
+      default:
+        - 'gpt-image-1' # Your specific model for images
+        # Add other OpenAI models you want to make available here
+        # - 'gpt-4'
+        # - 'gpt-3.5-turbo'
+      fetch: false # Set to true if you want to dynamically fetch all available models
+    titleConvo: true
+    titleModel: 'gpt-3.5-turbo' # Or any model suitable for titles
+    # modelDisplayLabel: 'OpenAI' # Optional display label
+    # iconURL: '/assets/openai.png' # Optional custom icon
 
-      # New OpenAI endpoint configuration
-      openAI:
-        apiKey: '${OPENAI_API_KEY}' # You will need to set this env var in Render
-        # baseURL: "https://api.openai.com/v1" # This is the default, usually not needed unless using a proxy
-        models:
-          fetch: false # To ensure only your specified model is listed for this endpoint
-          default:
-            - "gpt-image-1" # Your desired image model
-        titleConvo: true
-        titleModel: "gpt-image-1" # Or a cheaper/faster text model if preferred for titles
-        modelDisplayLabel: "OpenAI Images" # Or just "OpenAI"
+# This should be a top-level key, at the same indentation as 'version' and 'endpoints'
+fileConfig:
+  endpoints:
+    vectorStore:
+      type: rag_api
+      ragApiUrl: "${RAG_API_URL}" # This will be an env var on your main LibreChat Render service
+      # Optional: If you need to specify which embedding model the main app should expect or request
+      # This might not be needed if the RAG API handles its embedding model choice entirely.
+      # ragEmbeddingModel: "text-embedding-3-small" # Example
+  # You can also set global file size limits if needed
+  # serverFileSizeLimit: 100 # in MB
+  # avatarSizeLimit: 2 # in MB
 
-    # Add any other endpoint configurations (like OpenAI, Anthropic, etc.) if you use them.
-    # Ensure the YAML formatting (indentation) is correct.
+# ... any other configurations at the end of your file ...
+# Ensure there's a newline at the end of the file if it's the last thing.
