@@ -7,41 +7,41 @@ modelSpecs:
       nickname: 'Gemini 2.5 Pro (Online)'
       label: 'Gemini 2.5 Pro (Online)'
       preset:
-        endpoint: 'custom'
+        endpoint: 'OpenRouter'
         model: 'google/gemini-2.5-pro-preview:online'
     # Anthropic Model
     - name: 'anthropic/claude-3.7-sonnet:thinking:online'
       nickname: 'Claude 3.7 Sonnet (Online)'
       label: 'Claude 3.7 Sonnet (Online)'
       preset:
-        endpoint: 'custom'
+        endpoint: 'OpenRouter'
         model: 'anthropic/claude-3.7-sonnet:thinking:online'
     # OpenAI Models
     - name: 'openai/gpt-4.1:online'
       nickname: 'GPT-4.1 (Online)'
       label: 'GPT-4.1 (Online)'
       preset:
-        endpoint: 'custom'
+        endpoint: 'OpenRouter'
         model: 'openai/gpt-4.1:online'
     - name: 'openai/o4-mini-high:online'
       nickname: 'GPT-4o Mini High (Online)'
       label: 'GPT-4o Mini High (Online)'
       preset:
-        endpoint: 'custom'
+        endpoint: 'OpenRouter'
         model: 'openai/o4-mini-high:online'
     # Qwen Model
     - name: 'qwen/qwen3-235b-a22b:online'
       nickname: 'Qwen 3-235B (Online)'
       label: 'Qwen 3-235B (Online)'
       preset:
-        endpoint: 'custom'
+        endpoint: 'OpenRouter'
         model: 'qwen/qwen3-235b-a22b:online'
     # X.AI Model
     - name: 'x-ai/grok-3-beta:online'
       nickname: 'Grok 3 Beta (Online)'
       label: 'Grok 3 Beta (Online)'
       preset:
-        endpoint: 'custom'
+        endpoint: 'OpenRouter'
         model: 'x-ai/grok-3-beta:online'
 
 # Include any other general configurations you need at the top level.
