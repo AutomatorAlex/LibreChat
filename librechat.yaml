@@ -159,6 +159,10 @@ mcpServers:
     url: "https://server.smithery.ai/@nickclyde/duckduckgo-mcp-server/mcp?api_key=2889e4fc-ae4b-47c1-b2df-cdcfb187485c"
     # You might want to add a timeout
     # timeout: 30000
+  my-business-mcp: # Your custom business MCP
+    type: streamable-http
+    url: "https://n8n.metamation.net/mcp/12bd30ab-6657-4d89-95f7-5e6c818d81e6/sse"
+    # timeout: 30000 # Uncomment and adjust if needed
 
 # Definition of custom endpoints
 # customEndpoints:
