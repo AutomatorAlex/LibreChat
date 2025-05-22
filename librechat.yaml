@@ -5,26 +5,38 @@ modelSpecs:
     # Google Model
     - name: 'google/gemini-2.5-pro-preview:online'
       nickname: 'Gemini 2.5 Pro (Online)'
+      label: 'Gemini 2.5 Pro (Online)'
       endpoint: 'OpenRouter'
+      preset: {}
     # Anthropic Model
-    - name: 'anthropic/claude-3.7-sonnet:thinking:online' # Adding :online here too
+    - name: 'anthropic/claude-3.7-sonnet:thinking:online'
       nickname: 'Claude 3.7 Sonnet (Online)'
+      label: 'Claude 3.7 Sonnet (Online)'
       endpoint: 'OpenRouter'
+      preset: {}
     # OpenAI Models
     - name: 'openai/gpt-4.1:online'
       nickname: 'GPT-4.1 (Online)'
+      label: 'GPT-4.1 (Online)'
       endpoint: 'OpenRouter'
+      preset: {}
     - name: 'openai/o4-mini-high:online'
       nickname: 'GPT-4o Mini High (Online)'
+      label: 'GPT-4o Mini High (Online)'
       endpoint: 'OpenRouter'
+      preset: {}
     # Qwen Model
     - name: 'qwen/qwen3-235b-a22b:online'
       nickname: 'Qwen 3-235B (Online)'
+      label: 'Qwen 3-235B (Online)'
       endpoint: 'OpenRouter'
+      preset: {}
     # X.AI Model
     - name: 'x-ai/grok-3-beta:online'
       nickname: 'Grok 3 Beta (Online)'
+      label: 'Grok 3 Beta (Online)'
       endpoint: 'OpenRouter'
+      preset: {}
 
 # Include any other general configurations you need at the top level.
 # For example, if you had `cache: true` or `interface` settings.
