@@ -1,27 +1,22 @@
 version: 1.2.1 # Or your current LibreChat config version
 
 modelSpecs:
-  # Google Model
-  - name: 'google/gemini-2.5-pro-preview:online'
+  'google/gemini-2.5-pro-preview:online':
     nickname: 'Gemini 2.5 Pro (Online)'
     endpoint: 'OpenRouter'
-  # Anthropic Model
-  - name: 'anthropic/claude-3.7-sonnet:thinking:online' # Adding :online here too
+  'anthropic/claude-3.7-sonnet:thinking:online':
     nickname: 'Claude 3.7 Sonnet (Online)'
     endpoint: 'OpenRouter'
-  # OpenAI Models
-  - name: 'openai/gpt-4.1:online'
+  'openai/gpt-4.1:online':
     nickname: 'GPT-4.1 (Online)'
     endpoint: 'OpenRouter'
-  - name: 'openai/o4-mini-high:online'
+  'openai/o4-mini-high:online':
     nickname: 'GPT-4o Mini High (Online)'
     endpoint: 'OpenRouter'
-  # Qwen Model
-  - name: 'qwen/qwen3-235b-a22b:online'
+  'qwen/qwen3-235b-a22b:online':
     nickname: 'Qwen 3-235B (Online)'
     endpoint: 'OpenRouter'
-  # X.AI Model
-  - name: 'x-ai/grok-3-beta:online'
+  'x-ai/grok-3-beta:online':
     nickname: 'Grok 3 Beta (Online)'
     endpoint: 'OpenRouter'
 
