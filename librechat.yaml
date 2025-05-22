@@ -1,5 +1,30 @@
 version: 1.2.1 # Or your current LibreChat config version
 
+modelSpecs:
+  # Google Model
+  - name: 'google/gemini-2.5-pro-preview:online'
+    nickname: 'Gemini 2.5 Pro (Online)'
+    endpoint: 'OpenRouter'
+  # Anthropic Model
+  - name: 'anthropic/claude-3.7-sonnet:thinking:online' # Adding :online here too
+    nickname: 'Claude 3.7 Sonnet (Online)'
+    endpoint: 'OpenRouter'
+  # OpenAI Models
+  - name: 'openai/gpt-4.1:online'
+    nickname: 'GPT-4.1 (Online)'
+    endpoint: 'OpenRouter'
+  - name: 'openai/o4-mini-high:online'
+    nickname: 'GPT-4o Mini High (Online)'
+    endpoint: 'OpenRouter'
+  # Qwen Model
+  - name: 'qwen/qwen3-235b-a22b:online'
+    nickname: 'Qwen 3-235B (Online)'
+    endpoint: 'OpenRouter'
+  # X.AI Model
+  - name: 'x-ai/grok-3-beta:online'
+    nickname: 'Grok 3 Beta (Online)'
+    endpoint: 'OpenRouter'
+
 # Include any other general configurations you need at the top level.
 # For example, if you had `cache: true` or `interface` settings.
 
@@ -12,8 +37,11 @@ endpoints:
         fetch: false # Crucial for manually listing the :online model
         default:
           - 'google/gemini-2.5-pro-preview:online'
-          - 'anthropic/claude-3.7-sonnet:thinking'
-          - 'openai/gpt-4.1'
+          - 'anthropic/claude-3.7-sonnet:thinking:online'
+          - 'openai/gpt-4.1:online'
+          - 'qwen/qwen3-235b-a22b:online'
+          - 'x-ai/grok-3-beta:online'
+          - 'openai/o4-mini-high:online'
           # If you use other OpenRouter models, list them here as well:
           # - 'meta-llama/llama-3-70b-instruct'
       titleConvo: true
@@ -21,6 +49,10 @@ endpoints:
       dropParams:
         - 'stop'
       modelDisplayLabel: 'OpenRouter'
+      # Add plugin configuration for web search
+      plugins:
+        - id: "web"
+          max_results: 10 # Set max web search results to 10
       agents:
         code: true # Enables the Code Interpreter for this OpenRouter endpoint
     # Example for an OpenAI endpoint, if you were adding one directly (not via OpenRouter)
@@ -75,6 +107,21 @@ mcpServers:
     type: streamable-http # Reverting to streamable-http
     url: "https://server.smithery.ai/@smithery-ai/server-sequential-thinking/mcp?profile=delightful-hyena-GSmzOH&api_key=2889e4fc-ae4b-47c1-b2df-cdcfb187485c" # URL with profile and hardcoded API key
     timeout: 90000
+  custom-exa-search:
+    type: streamable-http # Assuming it follows similar MCP standards
+    url: "https://server.smithery.ai/exa/mcp?api_key=2889e4fc-ae4b-47c1-b2df-cdcfb187485c" 
+    # You might need to define a timeout or other parameters if necessary
+    # timeout: 30000 
+  smithery-toolbox: # Added new server
+    type: streamable-http 
+    url: "https://server.smithery.ai/@smithery/toolbox/mcp?api_key=2889e4fc-ae4b-47c1-b2df-cdcfb187485c&profile=delightful-hyena-GSmzOH"
+    # You might want to add a timeout similar to the other Smithery server
+    # timeout: 90000 
+  duckduckgo-mcp: # Added new server
+    type: streamable-http
+    url: "https://server.smithery.ai/@nickclyde/duckduckgo-mcp-server/mcp?api_key=2889e4fc-ae4b-47c1-b2df-cdcfb187485c"
+    # You might want to add a timeout
+    # timeout: 30000
 
 # Definition of custom endpoints
 # customEndpoints:
