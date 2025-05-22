@@ -160,7 +160,7 @@ mcpServers:
     # You might want to add a timeout
     # timeout: 30000
   my-business-mcp: # Your custom business MCP
-    type: streamable-http
+    type: eventsource
     url: "https://n8n.metamation.net/mcp/12bd30ab-6657-4d89-95f7-5e6c818d81e6/sse"
     # timeout: 30000 # Uncomment and adjust if needed
 
