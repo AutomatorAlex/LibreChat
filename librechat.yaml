@@ -1,5 +1,23 @@
 version: 1.2.1 # Or your current LibreChat config version
 
+# Interface settings to ensure UI elements remain visible with modelSpecs
+interface:
+  endpointsMenu: true
+  modelSelect: true
+  parameters: true
+  sidePanel: true
+  presets: true
+  prompts: true
+  bookmarks: true
+  multiConvo: true
+  agents: true
+  # To re-enable all default UI elements if modelSpecs hides them, you might also consider:
+  # endpointsMenu: true
+  # sidePanel: true
+  # prompts: true
+  # bookmarks: true
+  # multiConvo: true
+
 modelSpecs:
   list:
     # Google Model
