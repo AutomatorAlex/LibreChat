@@ -14,62 +14,6 @@ interface:
   temporaryChat: true    # Enable ephemeral conversations
   runCode: true          # Enable code execution interface
 
-modelSpecs:
-  list:
-    # Google Model
-    - name: 'google/gemini-2.5-pro-preview'
-      nickname: 'Gemini 2.5 Pro'
-      label: 'Gemini 2.5 Pro'
-      preset:
-        endpoint: 'OpenRouter'
-        model: 'google/gemini-2.5-pro-preview'
-    # Anthropic Models
-    - name: 'anthropic/claude-3.7-sonnet:thinking'
-      nickname: 'Claude 3.7 Sonnet'
-      label: 'Claude 3.7 Sonnet'
-      preset:
-        endpoint: 'OpenRouter'
-        model: 'anthropic/claude-3.7-sonnet:thinking'
-    - name: 'anthropic/claude-opus-4:thinking'
-      nickname: 'Claude Opus 4'
-      label: 'Claude Opus 4'
-      preset:
-        endpoint: 'OpenRouter'
-        model: 'anthropic/claude-opus-4:thinking'
-    - name: 'anthropic/claude-sonnet-4:thinking'
-      nickname: 'Claude Sonnet 4'
-      label: 'Claude Sonnet 4'
-      preset:
-        endpoint: 'OpenRouter'
-        model: 'anthropic/claude-sonnet-4:thinking'
-    # OpenAI Models
-    - name: 'openai/gpt-4.1'
-      nickname: 'GPT-4.1'
-      label: 'GPT-4.1'
-      preset:
-        endpoint: 'OpenRouter'
-        model: 'openai/gpt-4.1'
-    - name: 'openai/o4-mini-high'
-      nickname: 'GPT-4o Mini High'
-      label: 'GPT-4o Mini High'
-      preset:
-        endpoint: 'OpenRouter'
-        model: 'openai/o4-mini-high'
-    # Qwen Model
-    - name: 'qwen/qwen3-235b-a22b'
-      nickname: 'Qwen 3-235B'
-      label: 'Qwen 3-235B'
-      preset:
-        endpoint: 'OpenRouter'
-        model: 'qwen/qwen3-235b-a22b'
-    # X.AI Model
-    - name: 'x-ai/grok-3-beta'
-      nickname: 'Grok 3 Beta'
-      label: 'Grok 3 Beta'
-      preset:
-        endpoint: 'OpenRouter'
-        model: 'x-ai/grok-3-beta'
-
 endpoints:
   custom:
     - name: 'OpenRouter'
@@ -80,10 +24,12 @@ endpoints:
         default:
           - 'google/gemini-2.5-pro-preview'
           - 'anthropic/claude-3.7-sonnet:thinking'
+          - 'anthropic/claude-opus-4:thinking'
+          - 'anthropic/claude-sonnet-4:thinking'
           - 'openai/gpt-4.1'
+          - 'openai/o4-mini-high'
           - 'qwen/qwen3-235b-a22b'
           - 'x-ai/grok-3-beta'
-          - 'openai/o4-mini-high'
       titleConvo: true
       titleModel: 'openai/gpt-4.1-nano'
       dropParams:
