@@ -21,46 +21,46 @@ interface:
 modelSpecs:
   list:
     # Google Model
-    - name: 'google/gemini-2.5-pro-preview:online'
-      nickname: 'Gemini 2.5 Pro (Online)'
-      label: 'Gemini 2.5 Pro (Online)'
+    - name: 'google/gemini-2.5-pro-preview'
+      nickname: 'Gemini 2.5 Pro'
+      label: 'Gemini 2.5 Pro'
       preset:
         endpoint: 'OpenRouter'
-        model: 'google/gemini-2.5-pro-preview:online'
+        model: 'google/gemini-2.5-pro-preview'
     # Anthropic Model
-    - name: 'anthropic/claude-3.7-sonnet:thinking:online'
-      nickname: 'Claude 3.7 Sonnet (Online)'
-      label: 'Claude 3.7 Sonnet (Online)'
+    - name: 'anthropic/claude-3.7-sonnet:thinking'
+      nickname: 'Claude 3.7 Sonnet'
+      label: 'Claude 3.7 Sonnet'
       preset:
         endpoint: 'OpenRouter'
-        model: 'anthropic/claude-3.7-sonnet:thinking:online'
+        model: 'anthropic/claude-3.7-sonnet:thinking'
     # OpenAI Models
-    - name: 'openai/gpt-4.1:online'
-      nickname: 'GPT-4.1 (Online)'
-      label: 'GPT-4.1 (Online)'
+    - name: 'openai/gpt-4.1'
+      nickname: 'GPT-4.1'
+      label: 'GPT-4.1'
       preset:
         endpoint: 'OpenRouter'
-        model: 'openai/gpt-4.1:online'
-    - name: 'openai/o4-mini-high:online'
-      nickname: 'GPT-4o Mini High (Online)'
-      label: 'GPT-4o Mini High (Online)'
+        model: 'openai/gpt-4.1'
+    - name: 'openai/o4-mini-high'
+      nickname: 'GPT-4o Mini High'
+      label: 'GPT-4o Mini High'
       preset:
         endpoint: 'OpenRouter'
-        model: 'openai/o4-mini-high:online'
+        model: 'openai/o4-mini-high'
     # Qwen Model
-    - name: 'qwen/qwen3-235b-a22b:online'
-      nickname: 'Qwen 3-235B (Online)'
-      label: 'Qwen 3-235B (Online)'
+    - name: 'qwen/qwen3-235b-a22b'
+      nickname: 'Qwen 3-235B'
+      label: 'Qwen 3-235B'
       preset:
         endpoint: 'OpenRouter'
-        model: 'qwen/qwen3-235b-a22b:online'
+        model: 'qwen/qwen3-235b-a22b'
     # X.AI Model
-    - name: 'x-ai/grok-3-beta:online'
-      nickname: 'Grok 3 Beta (Online)'
-      label: 'Grok 3 Beta (Online)'
+    - name: 'x-ai/grok-3-beta'
+      nickname: 'Grok 3 Beta'
+      label: 'Grok 3 Beta'
       preset:
         endpoint: 'OpenRouter'
-        model: 'x-ai/grok-3-beta:online'
+        model: 'x-ai/grok-3-beta'
 
 # Include any other general configurations you need at the top level.
 # For example, if you had `cache: true` or `interface` settings.
@@ -73,12 +73,12 @@ endpoints:
       models:
         fetch: false # Crucial for manually listing the :online model
         default:
-          - 'google/gemini-2.5-pro-preview:online'
-          - 'anthropic/claude-3.7-sonnet:thinking:online'
-          - 'openai/gpt-4.1:online'
-          - 'qwen/qwen3-235b-a22b:online'
-          - 'x-ai/grok-3-beta:online'
-          - 'openai/o4-mini-high:online'
+          - 'google/gemini-2.5-pro-preview'
+          - 'anthropic/claude-3.7-sonnet:thinking'
+          - 'openai/gpt-4.1'
+          - 'qwen/qwen3-235b-a22b'
+          - 'x-ai/grok-3-beta'
+          - 'openai/o4-mini-high'
           # If you use other OpenRouter models, list them here as well:
           # - 'meta-llama/llama-3-70b-instruct'
       titleConvo: true
