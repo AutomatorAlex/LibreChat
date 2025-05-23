@@ -107,21 +107,32 @@ actions:
 
 mcpServers:
   smithery-sequential-thinking:
-    type: streamable-http
-    url: "https://server.smithery.ai/@smithery-ai/server-sequential-thinking/mcp?profile=delightful-hyena-GSmzOH&api_key=2889e4fc-ae4b-47c1-b2df-cdcfb187485c"
-    timeout: 90000
+    type: websocket
+    url: "wss://server.smithery.ai/@smithery-ai/server-sequential-thinking/mcp?profile=delightful-hyena-GSmzOH&api_key=2889e4fc-ae4b-47c1-b2df-cdcfb187485c"
+    timeout: 60000
+    initTimeout: 30000
   custom-exa-search:
-    type: streamable-http
-    url: "https://server.smithery.ai/exa/mcp?api_key=2889e4fc-ae4b-47c1-b2df-cdcfb187485c"
+    type: websocket
+    url: "wss://server.smithery.ai/exa/mcp?api_key=2889e4fc-ae4b-47c1-b2df-cdcfb187485c"
+    timeout: 60000
+    initTimeout: 30000
   smithery-toolbox:
-    type: streamable-http
-    url: "https://server.smithery.ai/@smithery/toolbox/mcp?api_key=2889e4fc-ae4b-47c1-b2df-cdcfb187485c&profile=delightful-hyena-GSmzOH"
+    type: websocket
+    url: "wss://server.smithery.ai/@smithery/toolbox/mcp?api_key=2889e4fc-ae4b-47c1-b2df-cdcfb187485c&profile=delightful-hyena-GSmzOH"
+    timeout: 60000
+    initTimeout: 30000
   duckduckgo-mcp:
-    type: streamable-http
-    url: "https://server.smithery.ai/@nickclyde/duckduckgo-mcp-server/mcp?api_key=2889e4fc-ae4b-47c1-b2df-cdcfb187485c"
+    type: websocket
+    url: "wss://server.smithery.ai/@nickclyde/duckduckgo-mcp-server/mcp?api_key=2889e4fc-ae4b-47c1-b2df-cdcfb187485c"
+    timeout: 60000
+    initTimeout: 30000
   my-business-mcp:
     type: sse
     url: "https://n8n.metamation.net/mcp/12bd30ab-6657-4d89-95f7-5e6c818d81e6/sse"
+    timeout: 30000
+    initTimeout: 15000
   outlook-mcp:
     type: sse
-    url: "https://n8n.metamation.net/mcp/97a5106e-0b1a-4b61-8818-937f81d6932c/sse" 
+    url: "https://n8n.metamation.net/mcp/97a5106e-0b1a-4b61-8818-937f81d6932c/sse"
+    timeout: 30000
+    initTimeout: 15000 
