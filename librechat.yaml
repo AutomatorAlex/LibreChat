@@ -1,5 +1,4 @@
-version: 1.1.0
-
+version: 1.2.1
 interface:
   endpointsMenu: true
   modelSelect: true
@@ -105,51 +104,40 @@ speech:
       cacheTTS: true
 
 mcpServers:
-  # Direct MCP servers using stdio
+  # Using Netlify Functions with streamable-http transport (perfect for hosted LibreChat!)
   exa-search:
-    type: stdio
-    command: npx
-    args:
-      - -y
-      - "@exa-js/mcp-server"
-    env:
-      EXA_API_KEY: "${EXA_API_KEY}"
+    type: streamable-http
+    url: https://mcps.netlify.app/.netlify/functions/mcp-exa
+    headers:
+      X-MCP-API-Key: "${MCP_API_KEY}"
     timeout: 30000
-    initTimeout: 10000
-
+    initTimeout: 15000
+    
   openrouter:
-    type: stdio
-    command: npx
-    args:
-      - -y
-      - "openrouter-mcp-server"
-    env:
-      OPENROUTER_API_KEY: "${OPENROUTER_API_KEY}"
-      OPENROUTER_DEFAULT_MODEL: "anthropic/claude-3-sonnet-20240229"
+    type: streamable-http  
+    url: https://mcps.netlify.app/.netlify/functions/mcp-openrouter
+    headers:
+      X-MCP-API-Key: "${MCP_API_KEY}"
     timeout: 30000
-    initTimeout: 10000
-
+    initTimeout: 15000
+    
   sequential-thinking:
-    type: stdio
-    command: npx
-    args:
-      - -y
-      - "mcp-sequential-thinking"
+    type: streamable-http
+    url: https://mcps.netlify.app/.netlify/functions/mcp-thinking
+    headers:
+      X-MCP-API-Key: "${MCP_API_KEY}"
     timeout: 30000
-    initTimeout: 10000
-
+    initTimeout: 15000
+    
   stripe-toolkit:
-    type: stdio
-    command: npx
-    args:
-      - -y
-      - "@stripe/agent-toolkit"
-    env:
-      STRIPE_SECRET_KEY: "${STRIPE_SECRET_KEY}"
+    type: streamable-http
+    url: https://mcps.netlify.app/.netlify/functions/mcp-stripe
+    headers:
+      X-MCP-API-Key: "${MCP_API_KEY}"
     timeout: 30000
-    initTimeout: 10000
+    initTimeout: 15000
 
-  # Working N8N MCPs (these use SSE properly)
+  # Working N8N MCPs (keep these as SSE)
   my-business-mcp:
     type: sse
     url: https://n8n.metamation.net/mcp/12bd30ab-6657-4d89-95f7-5e6c818d81e6/sse
