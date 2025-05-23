@@ -18,6 +18,11 @@ interface:
   # bookmarks: true
   # multiConvo: true
 
+# Global agents configuration - applies to all endpoints by default
+agents:
+  tools: true # Enable MCPs for all endpoints by default
+  code: true # Enable code interpreter for all endpoints by default
+
 modelSpecs:
   list:
     # Google Model
@@ -92,6 +97,7 @@ endpoints:
           max_results: 10 # Set max web search results to 10
       agents:
         code: true # Enables the Code Interpreter for this OpenRouter endpoint
+        tools: true # Enable external tools (MCPs) for this endpoint
     # Example for an OpenAI endpoint, if you were adding one directly (not via OpenRouter)
   openAI: # This is a system-level endpoint key
     # If you have multiple OpenAI accounts or want to label them
@@ -112,6 +118,7 @@ endpoints:
     # iconURL: '/assets/openai.png' # Optional custom icon
     agents:
       code: true # Enables the Code Interpreter globally for this endpoint
+      tools: true # Enable external tools (MCPs) for this endpoint as well
       # You can add other agent-related capabilities here if needed in the future
       # e.g., tools: ['Tool1', 'Tool2']
 
