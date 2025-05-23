@@ -101,28 +101,28 @@ speech:
 mcpServers:
   my-openrouter-mcp:
     type: sse
-    url: https://mcps.netlify.app/mcp/openrouter
+    url: https://mcps.netlify.app/mcp/openrouter/sse
     timeout: 60000
     initTimeout: 30000
     headers:
       X-MCP-API-Key: ${MCP_API_KEY}
   my-exa-search:
     type: sse
-    url: https://mcps.netlify.app/mcp/exa
+    url: https://mcps.netlify.app/mcp/exa/sse
     timeout: 60000
     initTimeout: 30000
     headers:
       X-MCP-API-Key: ${MCP_API_KEY}
   my-sequential-thinking:
     type: sse
-    url: https://mcps.netlify.app/mcp/thinking
+    url: https://mcps.netlify.app/mcp/thinking/sse
     timeout: 60000
     initTimeout: 30000
     headers:
       X-MCP-API-Key: ${MCP_API_KEY}
   my-stripe-mcp:
     type: sse
-    url: https://mcps.netlify.app/mcp/stripe
+    url: https://mcps.netlify.app/mcp/stripe/sse
     timeout: 60000
     initTimeout: 30000
     headers:
