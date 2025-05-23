@@ -100,33 +100,41 @@ speech:
       cacheTTS: true
 mcpServers:
   my-openrouter-mcp:
-    type: sse
-    url: https://mcps.netlify.app/mcp/openrouter/sse
+    command: npx
+    args:
+      - mcp-remote@next
+      - https://mcps.netlify.app/mcp/openrouter
     timeout: 60000
     initTimeout: 30000
-    headers:
-      X-MCP-API-Key: ${MCP_API_KEY}
+    env:
+      MCP_API_KEY: ${MCP_API_KEY}
   my-exa-search:
-    type: sse
-    url: https://mcps.netlify.app/mcp/exa/sse
+    command: npx
+    args:
+      - mcp-remote@next
+      - https://mcps.netlify.app/mcp/exa
     timeout: 60000
     initTimeout: 30000
-    headers:
-      X-MCP-API-Key: ${MCP_API_KEY}
+    env:
+      MCP_API_KEY: ${MCP_API_KEY}
   my-sequential-thinking:
-    type: sse
-    url: https://mcps.netlify.app/mcp/thinking/sse
+    command: npx
+    args:
+      - mcp-remote@next
+      - https://mcps.netlify.app/mcp/thinking
     timeout: 60000
     initTimeout: 30000
-    headers:
-      X-MCP-API-Key: ${MCP_API_KEY}
+    env:
+      MCP_API_KEY: ${MCP_API_KEY}
   my-stripe-mcp:
-    type: sse
-    url: https://mcps.netlify.app/mcp/stripe/sse
+    command: npx
+    args:
+      - mcp-remote@next
+      - https://mcps.netlify.app/mcp/stripe
     timeout: 60000
     initTimeout: 30000
-    headers:
-      X-MCP-API-Key: ${MCP_API_KEY}
+    env:
+      MCP_API_KEY: ${MCP_API_KEY}
   my-business-mcp:
     type: sse
     url: https://n8n.metamation.net/mcp/12bd30ab-6657-4d89-95f7-5e6c818d81e6/sse
