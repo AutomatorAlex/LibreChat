@@ -64,6 +64,13 @@ actions:
     - "swapi.dev"
     - "librechat.ai"
     - "google.com"
+    - "api.github.com"          # GitHub API
+    - "jsonplaceholder.typicode.com"  # Testing API
+    - "httpbin.org"             # HTTP testing
+    - "api.openweathermap.org"  # Weather data
+    - "newsapi.org"             # News API
+    - "api.trello.com"          # Trello boards
+    - "slack.com"               # Slack integration
 
 # Speech Configuration (STT & TTS)
 speech:
@@ -112,6 +119,11 @@ mcpServers:
   duckduckgo-mcp:
     type: streamable-http
     url: "https://server.smithery.ai/@nickclyde/duckduckgo-mcp-server/mcp?api_key=2889e4fc-ae4b-47c1-b2df-cdcfb187485c"
+    timeout: 60000
+    initTimeout: 30000
+  openrouter-mcp:
+    type: streamable-http
+    url: "https://server.smithery.ai/@mcpserver/openrouterai/mcp?profile=delightful-hyena-GSmzOH&api_key=2889e4fc-ae4b-47c1-b2df-cdcfb187485c"
     timeout: 60000
     initTimeout: 30000
   my-business-mcp:
