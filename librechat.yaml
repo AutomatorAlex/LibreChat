@@ -18,11 +18,6 @@ interface:
   # bookmarks: true
   # multiConvo: true
 
-# Global agents configuration - applies to all endpoints by default
-agents:
-  tools: true # Enable MCPs for all endpoints by default
-  code: true # Enable code interpreter for all endpoints by default
-
 modelSpecs:
   list:
     # Google Model
