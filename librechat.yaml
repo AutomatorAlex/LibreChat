@@ -101,29 +101,19 @@ speech:
       cacheTTS: true
 
 mcpServers:
-  smithery-sequential-thinking:
+  my-sequential-thinking:
     type: streamable-http
-    url: "https://server.smithery.ai/@smithery-ai/server-sequential-thinking/mcp?profile=delightful-hyena-GSmzOH&api_key=2889e4fc-ae4b-47c1-b2df-cdcfb187485c"
+    url: "https://mcps-7hm5.onrender.com/api/mcp/mcp-3"
     timeout: 60000
     initTimeout: 30000
-  custom-exa-search:
+  my-exa-search:
     type: streamable-http
-    url: "https://server.smithery.ai/exa/mcp?api_key=2889e4fc-ae4b-47c1-b2df-cdcfb187485c"
+    url: "https://mcps-7hm5.onrender.com/api/mcp/mcp-2"
     timeout: 60000
     initTimeout: 30000
-  smithery-toolbox:
+  my-openrouter-mcp:
     type: streamable-http
-    url: "https://server.smithery.ai/@smithery/toolbox/mcp?api_key=2889e4fc-ae4b-47c1-b2df-cdcfb187485c&profile=delightful-hyena-GSmzOH"
-    timeout: 60000
-    initTimeout: 30000
-  duckduckgo-mcp:
-    type: streamable-http
-    url: "https://server.smithery.ai/@nickclyde/duckduckgo-mcp-server/mcp?api_key=2889e4fc-ae4b-47c1-b2df-cdcfb187485c"
-    timeout: 60000
-    initTimeout: 30000
-  openrouter-mcp:
-    type: streamable-http
-    url: "https://server.smithery.ai/@mcpserver/openrouterai/mcp?profile=delightful-hyena-GSmzOH&api_key=2889e4fc-ae4b-47c1-b2df-cdcfb187485c"
+    url: "https://mcps-7hm5.onrender.com/api/mcp/mcp-1"
     timeout: 60000
     initTimeout: 30000
   my-business-mcp:
