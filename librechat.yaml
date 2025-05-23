@@ -1,6 +1,4 @@
-version: 1.2.1 # Or your current LibreChat config version
-
-# Interface settings to ensure UI elements remain visible with modelSpecs
+version: 1.2.1
 interface:
   endpointsMenu: true
   modelSelect: true
@@ -11,118 +9,115 @@ interface:
   bookmarks: true
   multiConvo: true
   agents: true
-  temporaryChat: true    # Enable ephemeral conversations
-  runCode: true          # Enable code execution interface
-
+  temporaryChat: true
+  runCode: true
 endpoints:
   custom:
-    - name: 'OpenRouter'
-      apiKey: '${OPENROUTER_KEY}' # This will use your Render env var for OPENROUTER_KEY
-      baseURL: 'https://openrouter.ai/api/v1'
+    - name: OpenRouter
+      apiKey: ${OPENROUTER_KEY}
+      baseURL: https://openrouter.ai/api/v1
       models:
         fetch: false
         default:
-          - 'google/gemini-2.5-pro-preview'
-          - 'anthropic/claude-3.7-sonnet:thinking'
-          - 'anthropic/claude-opus-4'
-          - 'anthropic/claude-sonnet-4'
-          - 'openai/gpt-4.1'
-          - 'openai/o4-mini-high'
-          - 'qwen/qwen3-235b-a22b'
-          - 'x-ai/grok-3-beta'
+          - google/gemini-2.5-pro-preview
+          - anthropic/claude-3.7-sonnet:thinking
+          - anthropic/claude-opus-4
+          - anthropic/claude-sonnet-4
+          - openai/gpt-4.1
+          - openai/o4-mini-high
+          - qwen/qwen3-235b-a22b
+          - x-ai/grok-3-beta
       titleConvo: true
-      titleModel: 'openai/gpt-4.1-nano'
+      titleModel: openai/gpt-4.1-nano
       dropParams:
-        - 'stop'
-      modelDisplayLabel: 'OpenRouter'
+        - stop
+      modelDisplayLabel: OpenRouter
       plugins:
-        - id: "web"
+        - id: web
           max_results: 10
       agents:
         code: true
         tools: true
   openAI:
-    apiKey: '${OPENAI_API_KEY}'
+    apiKey: ${OPENAI_API_KEY}
     models:
       default:
-        - 'gpt-image-1'
+        - gpt-image-1
       fetch: false
     titleConvo: true
-    titleModel: 'gpt-3.5-turbo'
+    titleModel: gpt-3.5-turbo
     agents:
       code: true
       tools: true
-
 fileConfig:
   endpoints:
     vectorStore:
       type: rag_api
-      ragApiUrl: "${RAG_API_URL}"
-
+      ragApiUrl: ${RAG_API_URL}
 actions:
   allowedDomains:
-    - "swapi.dev"
-    - "librechat.ai"
-    - "google.com"
-    - "api.github.com"          # GitHub API
-    - "jsonplaceholder.typicode.com"  # Testing API
-    - "httpbin.org"             # HTTP testing
-    - "api.openweathermap.org"  # Weather data
-    - "newsapi.org"             # News API
-    - "api.trello.com"          # Trello boards
-    - "slack.com"               # Slack integration
-
-# Speech Configuration (STT & TTS)
+    - swapi.dev
+    - librechat.ai
+    - google.com
+    - api.github.com
+    - jsonplaceholder.typicode.com
+    - httpbin.org
+    - api.openweathermap.org
+    - newsapi.org
+    - api.trello.com
+    - slack.com
 speech:
   tts:
     openai:
-      apiKey: '${OPENAI_API_KEY}' # Uses your existing OpenAI key
-      model: 'tts-1'
-      voices: ['alloy', 'echo', 'fable', 'onyx', 'nova', 'shimmer']
+      apiKey: ${OPENAI_API_KEY}
+      model: tts-1
+      voices:
+        - alloy
+        - echo
+        - fable
+        - onyx
+        - nova
+        - shimmer
   stt:
     openai:
-      apiKey: '${OPENAI_API_KEY}' # Uses your existing OpenAI key  
-      model: 'whisper-1'
+      apiKey: ${OPENAI_API_KEY}
+      model: whisper-1
   speechTab:
     conversationMode: true
     advancedMode: false
     speechToText:
-      engineSTT: "external"
-      languageSTT: "English (US)"
+      engineSTT: external
+      languageSTT: English (US)
       autoTranscribeAudio: true
       decibelValue: -45
       autoSendText: 0
     textToSpeech:
-      engineTTS: "external"
-      voice: "alloy"
-      languageTTS: "en"
+      engineTTS: external
+      voice: alloy
+      languageTTS: en
       automaticPlayback: true
-      playbackRate: 1.0
+      playbackRate: 1
       cacheTTS: true
-
 mcpServers:
-  my-sequential-thinking:
+  my-openrouter-mcp:
     type: streamable-http
-    url: "https://mcps-7hm5.onrender.com/api/mcp/mcp-3"
     timeout: 60000
     initTimeout: 30000
   my-exa-search:
     type: streamable-http
-    url: "https://mcps-7hm5.onrender.com/api/mcp/mcp-2"
     timeout: 60000
     initTimeout: 30000
-  my-openrouter-mcp:
+  my-sequential-thinking:
     type: streamable-http
-    url: "https://mcps-7hm5.onrender.com/api/mcp/mcp-1"
     timeout: 60000
     initTimeout: 30000
   my-business-mcp:
     type: sse
-    url: "https://n8n.metamation.net/mcp/12bd30ab-6657-4d89-95f7-5e6c818d81e6/sse"
+    url: https://n8n.metamation.net/mcp/12bd30ab-6657-4d89-95f7-5e6c818d81e6/sse
     timeout: 30000
     initTimeout: 15000
   outlook-mcp:
     type: sse
-    url: "https://n8n.metamation.net/mcp/97a5106e-0b1a-4b61-8818-937f81d6932c/sse"
+    url: https://n8n.metamation.net/mcp/97a5106e-0b1a-4b61-8818-937f81d6932c/sse
     timeout: 30000
-    initTimeout: 15000 
+    initTimeout: 15000
