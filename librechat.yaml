@@ -21,13 +21,25 @@ modelSpecs:
       preset:
         endpoint: 'OpenRouter'
         model: 'google/gemini-2.5-pro-preview'
-    # Anthropic Model
+    # Anthropic Models
     - name: 'anthropic/claude-3.7-sonnet:thinking'
       nickname: 'Claude 3.7 Sonnet'
       label: 'Claude 3.7 Sonnet'
       preset:
         endpoint: 'OpenRouter'
         model: 'anthropic/claude-3.7-sonnet:thinking'
+    - name: 'anthropic/claude-opus-4:thinking'
+      nickname: 'Claude Opus 4'
+      label: 'Claude Opus 4'
+      preset:
+        endpoint: 'OpenRouter'
+        model: 'anthropic/claude-opus-4:thinking'
+    - name: 'anthropic/claude-sonnet-4:thinking'
+      nickname: 'Claude Sonnet 4'
+      label: 'Claude Sonnet 4'
+      preset:
+        endpoint: 'OpenRouter'
+        model: 'anthropic/claude-sonnet-4:thinking'
     # OpenAI Models
     - name: 'openai/gpt-4.1'
       nickname: 'GPT-4.1'
