@@ -11,12 +11,6 @@ interface:
   bookmarks: true
   multiConvo: true
   agents: true
-  # To re-enable all default UI elements if modelSpecs hides them, you might also consider:
-  # endpointsMenu: true
-  # sidePanel: true
-  # prompts: true
-  # bookmarks: true
-  # multiConvo: true
 
 modelSpecs:
   list:
@@ -62,16 +56,13 @@ modelSpecs:
         endpoint: 'OpenRouter'
         model: 'x-ai/grok-3-beta'
 
-# Include any other general configurations you need at the top level.
-# For example, if you had `cache: true` or `interface` settings.
-
 endpoints:
   custom:
     - name: 'OpenRouter'
       apiKey: '${OPENROUTER_KEY}' # This will use your Render env var for OPENROUTER_KEY
       baseURL: 'https://openrouter.ai/api/v1'
       models:
-        fetch: false # Crucial for manually listing the :online model
+        fetch: false
         default:
           - 'google/gemini-2.5-pro-preview'
           - 'anthropic/claude-3.7-sonnet:thinking'
@@ -79,97 +70,58 @@ endpoints:
           - 'qwen/qwen3-235b-a22b'
           - 'x-ai/grok-3-beta'
           - 'openai/o4-mini-high'
-          # If you use other OpenRouter models, list them here as well:
-          # - 'meta-llama/llama-3-70b-instruct'
       titleConvo: true
       titleModel: 'openai/gpt-4.1-nano'
       dropParams:
         - 'stop'
       modelDisplayLabel: 'OpenRouter'
-      # Add plugin configuration for web search
       plugins:
         - id: "web"
-          max_results: 10 # Set max web search results to 10
+          max_results: 10
       agents:
-        code: true # Enables the Code Interpreter for this OpenRouter endpoint
-        tools: true # Enable external tools (MCPs) for this endpoint
-    # Example for an OpenAI endpoint, if you were adding one directly (not via OpenRouter)
-  openAI: # This is a system-level endpoint key
-    # If you have multiple OpenAI accounts or want to label them
-    # - name: 'My Personal OpenAI'
-    apiKey: '${OPENAI_API_KEY}' # Will use OPENAI_API_KEY from Render env vars
-    # organization: '${OPENAI_ORGANIZATION}' # Optional
-    # baseURL: 'https://api.openai.com/v1' # Default, can be overridden for proxies
+        code: true
+        tools: true
+  openAI:
+    apiKey: '${OPENAI_API_KEY}'
     models:
       default:
-        - 'gpt-image-1' # Your specific model for images
-        # Add other OpenAI models you want to make available here
-        # - 'gpt-4'
-        # - 'gpt-3.5-turbo'
-      fetch: false # Set to true if you want to dynamically fetch all available models
+        - 'gpt-image-1'
+      fetch: false
     titleConvo: true
-    titleModel: 'gpt-3.5-turbo' # Or any model suitable for titles
-    # modelDisplayLabel: 'OpenAI' # Optional display label
-    # iconURL: '/assets/openai.png' # Optional custom icon
+    titleModel: 'gpt-3.5-turbo'
     agents:
-      code: true # Enables the Code Interpreter globally for this endpoint
-      tools: true # Enable external tools (MCPs) for this endpoint as well
-      # You can add other agent-related capabilities here if needed in the future
-      # e.g., tools: ['Tool1', 'Tool2']
+      code: true
+      tools: true
 
-# This should be a top-level key, at the same indentation as 'version' and 'endpoints'
 fileConfig:
   endpoints:
     vectorStore:
       type: rag_api
-      ragApiUrl: "${RAG_API_URL}" # This will be an env var on your main LibreChat Render service
-      # Optional: If you need to specify which embedding model the main app should expect or request
-      # This might not be needed if the RAG API handles its embedding model choice entirely.
-      # ragEmbeddingModel: "text-embedding-3-small" # Example
-  # You can also set global file size limits if needed
-  # serverFileSizeLimit: 100 # in MB
-  # avatarSizeLimit: 2 # in MB
+      ragApiUrl: "${RAG_API_URL}"
 
-# ... any other configurations at the end of your file ...
-# Ensure there's a newline at the end of the file if it's the last thing.
-
-# Example Actions Object Structure
 actions:
   allowedDomains:
     - "swapi.dev"
     - "librechat.ai"
     - "google.com"
 
-# MCP Servers
 mcpServers:
-  smithery-sequential-thinking: # New name for this server entry
-    type: streamable-http # Reverting to streamable-http
-    url: "https://server.smithery.ai/@smithery-ai/server-sequential-thinking/mcp?profile=delightful-hyena-GSmzOH&api_key=2889e4fc-ae4b-47c1-b2df-cdcfb187485c" # URL with profile and hardcoded API key
+  smithery-sequential-thinking:
+    type: streamable-http
+    url: "https://server.smithery.ai/@smithery-ai/server-sequential-thinking/mcp?profile=delightful-hyena-GSmzOH&api_key=2889e4fc-ae4b-47c1-b2df-cdcfb187485c"
     timeout: 90000
   custom-exa-search:
-    type: streamable-http # Assuming it follows similar MCP standards
-    url: "https://server.smithery.ai/exa/mcp?api_key=2889e4fc-ae4b-47c1-b2df-cdcfb187485c" 
-    # You might need to define a timeout or other parameters if necessary
-    # timeout: 30000 
-  smithery-toolbox: # Added new server
-    type: streamable-http 
+    type: streamable-http
+    url: "https://server.smithery.ai/exa/mcp?api_key=2889e4fc-ae4b-47c1-b2df-cdcfb187485c"
+  smithery-toolbox:
+    type: streamable-http
     url: "https://server.smithery.ai/@smithery/toolbox/mcp?api_key=2889e4fc-ae4b-47c1-b2df-cdcfb187485c&profile=delightful-hyena-GSmzOH"
-    # You might want to add a timeout similar to the other Smithery server
-    # timeout: 90000 
-  duckduckgo-mcp: # Added new server
+  duckduckgo-mcp:
     type: streamable-http
     url: "https://server.smithery.ai/@nickclyde/duckduckgo-mcp-server/mcp?api_key=2889e4fc-ae4b-47c1-b2df-cdcfb187485c"
-    # You might want to add a timeout
-    # timeout: 30000
-  my-business-mcp: # Your custom business MCP
+  my-business-mcp:
     type: sse
     url: "https://n8n.metamation.net/mcp/12bd30ab-6657-4d89-95f7-5e6c818d81e6/sse"
-    # timeout: 30000 # Uncomment and adjust if needed
-  outlook-mcp: # Outlook MCP
+  outlook-mcp:
     type: sse
-    url: "https://n8n.metamation.net/mcp/97a5106e-0b1a-4b61-8818-937f81d6932c/sse"
-    # timeout: 30000 # Uncomment and adjust if needed
-
-# Definition of custom endpoints
-# customEndpoints:
-#   - name: "openAI"
+    url: "https://n8n.metamation.net/mcp/97a5106e-0b1a-4b61-8818-937f81d6932c/sse" 
