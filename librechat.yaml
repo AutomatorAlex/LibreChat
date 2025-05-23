@@ -1,4 +1,5 @@
-version: 1.2.1
+version: 1.1.0
+
 interface:
   endpointsMenu: true
   modelSelect: true
@@ -11,6 +12,7 @@ interface:
   agents: true
   temporaryChat: true
   runCode: true
+
 endpoints:
   custom:
     - name: OpenRouter
@@ -49,11 +51,13 @@ endpoints:
     agents:
       code: true
       tools: true
+
 fileConfig:
   endpoints:
     vectorStore:
       type: rag_api
       ragApiUrl: ${RAG_API_URL}
+
 actions:
   allowedDomains:
     - swapi.dev
@@ -66,6 +70,7 @@ actions:
     - newsapi.org
     - api.trello.com
     - slack.com
+
 speech:
   tts:
     openai:
@@ -98,48 +103,59 @@ speech:
       automaticPlayback: true
       playbackRate: 1
       cacheTTS: true
+
 mcpServers:
-  my-openrouter-mcp:
+  # Direct MCP servers using stdio
+  exa-search:
+    type: stdio
     command: npx
     args:
-      - mcp-remote@next
-      - https://mcps.netlify.app/mcp/openrouter
-    timeout: 60000
-    initTimeout: 30000
+      - -y
+      - "@exa-js/mcp-server"
     env:
-      MCP_API_KEY: ${MCP_API_KEY}
-  my-exa-search:
+      EXA_API_KEY: "${EXA_API_KEY}"
+    timeout: 30000
+    initTimeout: 10000
+
+  openrouter:
+    type: stdio
     command: npx
     args:
-      - mcp-remote@next
-      - https://mcps.netlify.app/mcp/exa
-    timeout: 60000
-    initTimeout: 30000
+      - -y
+      - "openrouter-mcp-server"
     env:
-      MCP_API_KEY: ${MCP_API_KEY}
-  my-sequential-thinking:
+      OPENROUTER_API_KEY: "${OPENROUTER_API_KEY}"
+      OPENROUTER_DEFAULT_MODEL: "anthropic/claude-3-sonnet-20240229"
+    timeout: 30000
+    initTimeout: 10000
+
+  sequential-thinking:
+    type: stdio
     command: npx
     args:
-      - mcp-remote@next
-      - https://mcps.netlify.app/mcp/thinking
-    timeout: 60000
-    initTimeout: 30000
-    env:
-      MCP_API_KEY: ${MCP_API_KEY}
-  my-stripe-mcp:
+      - -y
+      - "mcp-sequential-thinking"
+    timeout: 30000
+    initTimeout: 10000
+
+  stripe-toolkit:
+    type: stdio
     command: npx
     args:
-      - mcp-remote@next
-      - https://mcps.netlify.app/mcp/stripe
-    timeout: 60000
-    initTimeout: 30000
+      - -y
+      - "@stripe/agent-toolkit"
     env:
-      MCP_API_KEY: ${MCP_API_KEY}
+      STRIPE_SECRET_KEY: "${STRIPE_SECRET_KEY}"
+    timeout: 30000
+    initTimeout: 10000
+
+  # Working N8N MCPs (these use SSE properly)
   my-business-mcp:
     type: sse
     url: https://n8n.metamation.net/mcp/12bd30ab-6657-4d89-95f7-5e6c818d81e6/sse
     timeout: 30000
     initTimeout: 15000
+    
   outlook-mcp:
     type: sse
     url: https://n8n.metamation.net/mcp/97a5106e-0b1a-4b61-8818-937f81d6932c/sse
