@@ -150,30 +150,22 @@ speech:
 mcpServers:
   smithery-sequential-thinking:
     type: streamable-http
-    url: "https://server.smithery.ai/@smithery-ai/server-sequential-thinking/mcp?profile=delightful-hyena-GSmzOH"
-    headers:
-      Authorization: "Bearer 2889e4fc-ae4b-47c1-b2df-cdcfb187485c"
+    url: "https://server.smithery.ai/@smithery-ai/server-sequential-thinking/mcp?profile=delightful-hyena-GSmzOH&api_key=2889e4fc-ae4b-47c1-b2df-cdcfb187485c"
     timeout: 60000
     initTimeout: 30000
   custom-exa-search:
     type: streamable-http
-    url: "https://server.smithery.ai/exa/mcp"
-    headers:
-      Authorization: "Bearer 2889e4fc-ae4b-47c1-b2df-cdcfb187485c"
+    url: "https://server.smithery.ai/exa/mcp?api_key=2889e4fc-ae4b-47c1-b2df-cdcfb187485c"
     timeout: 60000
     initTimeout: 30000
   smithery-toolbox:
     type: streamable-http
-    url: "https://server.smithery.ai/@smithery/toolbox/mcp?profile=delightful-hyena-GSmzOH"
-    headers:
-      Authorization: "Bearer 2889e4fc-ae4b-47c1-b2df-cdcfb187485c"
+    url: "https://server.smithery.ai/@smithery/toolbox/mcp?api_key=2889e4fc-ae4b-47c1-b2df-cdcfb187485c&profile=delightful-hyena-GSmzOH"
     timeout: 60000
     initTimeout: 30000
   duckduckgo-mcp:
     type: streamable-http
-    url: "https://server.smithery.ai/@nickclyde/duckduckgo-mcp-server/mcp"
-    headers:
-      Authorization: "Bearer 2889e4fc-ae4b-47c1-b2df-cdcfb187485c"
+    url: "https://server.smithery.ai/@nickclyde/duckduckgo-mcp-server/mcp?api_key=2889e4fc-ae4b-47c1-b2df-cdcfb187485c"
     timeout: 60000
     initTimeout: 30000
   my-business-mcp:
