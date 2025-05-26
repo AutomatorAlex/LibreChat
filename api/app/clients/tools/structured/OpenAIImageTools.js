@@ -13,58 +13,21 @@ const { logger } = require('~/config');
 
 /** Default descriptions for image generation tool  */
 const DEFAULT_IMAGE_GEN_DESCRIPTION = `
-Generates high-quality, original images based solely on text, not using any uploaded reference images.
-
-When to use \`image_gen_oai\`:
-- To create entirely new images from detailed text descriptions that do NOT reference any image files.
-
-When NOT to use \`image_gen_oai\`:
-- If the user has uploaded any images and requests modifications, enhancements, or remixing based on those uploads → use \`image_edit_oai\` instead.
-
-Generated image IDs will be returned in the response, so you can refer to them in future requests made to \`image_edit_oai\`.
+Generates new images from text. Use for original creations. Do NOT use if referencing uploaded images (use image_edit_oai for that). Returns image IDs.
 `.trim();
 
 /** Default description for image editing tool  */
 const DEFAULT_IMAGE_EDIT_DESCRIPTION =
-  `Generates high-quality, original images based on text and one or more uploaded/referenced images.
-
-When to use \`image_edit_oai\`:
-- The user wants to modify, extend, or remix one **or more** uploaded images, either:
-  - Previously generated, or in the current request (both to be included in the \`image_ids\` array).
-- Always when the user refers to uploaded images for editing, enhancement, remixing, style transfer, or combining elements.
-- Any current or existing images are to be used as visual guides.
-- If there are any files in the current request, they are more likely than not expected as references for image edit requests.
-
-When NOT to use \`image_edit_oai\`:
-- Brand-new generations that do not rely on an existing image → use \`image_gen_oai\` instead.
-
-Both generated and referenced image IDs will be returned in the response, so you can refer to them in future requests made to \`image_edit_oai\`.
+  `Edits images based on text and uploaded/referenced images. Use to modify, extend, or remix existing images. Do NOT use for new images from text only (use image_gen_oai for that). Returns image IDs.
 `.trim();
 
 /** Default prompt descriptions  */
-const DEFAULT_IMAGE_GEN_PROMPT_DESCRIPTION = `Describe the image you want in detail. 
-      Be highly specific—break your idea into layers: 
-      (1) main concept and subject,
-      (2) composition and position,
-      (3) lighting and mood,
-      (4) style, medium, or camera details,
-      (5) important features (age, expression, clothing, etc.),
-      (6) background.
-      Use positive, descriptive language and specify what should be included, not what to avoid. 
-      List number and characteristics of people/objects, and mention style/technical requirements (e.g., "DSLR photo, 85mm lens, golden hour").
-      Do not reference any uploaded images—use for new image creation from text only.`;
+const DEFAULT_IMAGE_GEN_PROMPT_DESCRIPTION = `Detailed text description of the desired new image. Specify subject, composition, lighting, style, and key features. Do not reference uploaded files.`;
 
-const DEFAULT_IMAGE_EDIT_PROMPT_DESCRIPTION = `Describe the changes, enhancements, or new ideas to apply to the uploaded image(s).
-      Be highly specific—break your request into layers: 
-      (1) main concept or transformation,
-      (2) specific edits/replacements or composition guidance,
-      (3) desired style, mood, or technique,
-      (4) features/items to keep, change, or add (such as objects, people, clothing, lighting, etc.).
-      Use positive, descriptive language and clarify what should be included or changed, not what to avoid.
-      Always base this prompt on the most recently uploaded reference images.`;
+const DEFAULT_IMAGE_EDIT_PROMPT_DESCRIPTION = `Detailed text description of changes for the uploaded/referenced image(s). Specify edits, style, and features to keep, change, or add.`;
 
 const displayMessage =
-  'The tool displayed an image. All generated images are already plainly visible, so don\'t repeat the descriptions in detail. Do not list download links as they are available in the UI already. The user may download the images by clicking on them, but do not mention anything about downloading to the user.';
+  "The tool displayed an image. All generated images are already plainly visible, so don't repeat the descriptions in detail. Do not list download links as they are available in the UI already. The user may download the images by clicking on them, but do not mention anything about downloading to the user.";
 
 /**
  * Replaces unwanted characters from the input string

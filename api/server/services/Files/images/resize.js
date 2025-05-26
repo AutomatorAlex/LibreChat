@@ -7,17 +7,15 @@ const { EModelEndpoint } = require('librechat-data-provider');
  * @param {Buffer} inputBuffer - The buffer of the image to be resized.
  * @param {'low' | 'high'} resolution - The resolution to resize the image to.
  *                                      'low' for a maximum of 512x512 resolution,
- *                                      'high' for a maximum of 768x2000 resolution.
+ *                                      'high' to keep original resolution (uncapped).
  * @param {EModelEndpoint} endpoint - Identifier for specific endpoint handling
  * @returns {Promise<{buffer: Buffer, width: number, height: number}>} An object containing the resized image buffer and its dimensions.
  * @throws Will throw an error if the resolution parameter is invalid.
  */
 async function resizeImageBuffer(inputBuffer, resolution, endpoint) {
   const maxLowRes = 512;
-  const maxShortSideHighRes = 768;
-  const maxLongSideHighRes = endpoint === EModelEndpoint.anthropic ? 1568 : 2000;
+  // maxShortSideHighRes and maxLongSideHighRes are no longer used for 'high' resolution.
 
-  let newWidth, newHeight;
   let resizeOptions = { fit: 'inside', withoutEnlargement: true };
 
   if (resolution === 'low') {
@@ -25,32 +23,11 @@ async function resizeImageBuffer(inputBuffer, resolution, endpoint) {
     resizeOptions.height = maxLowRes;
   } else if (resolution === 'high') {
     const metadata = await sharp(inputBuffer).metadata();
-    const isWidthShorter = metadata.width < metadata.height;
-
-    if (isWidthShorter) {
-      // Width is the shorter side
-      newWidth = Math.min(metadata.width, maxShortSideHighRes);
-      // Calculate new height to maintain aspect ratio
-      newHeight = Math.round((metadata.height / metadata.width) * newWidth);
-      // Ensure the long side does not exceed the maximum allowed
-      if (newHeight > maxLongSideHighRes) {
-        newHeight = maxLongSideHighRes;
-        newWidth = Math.round((metadata.width / metadata.height) * newHeight);
-      }
-    } else {
-      // Height is the shorter side
-      newHeight = Math.min(metadata.height, maxShortSideHighRes);
-      // Calculate new width to maintain aspect ratio
-      newWidth = Math.round((metadata.width / metadata.height) * newHeight);
-      // Ensure the long side does not exceed the maximum allowed
-      if (newWidth > maxLongSideHighRes) {
-        newWidth = maxLongSideHighRes;
-        newHeight = Math.round((metadata.height / metadata.width) * newWidth);
-      }
-    }
-
-    resizeOptions.width = newWidth;
-    resizeOptions.height = newHeight;
+    // For 'high' resolution, effectively don't cap the image size.
+    // Use original dimensions. Rotation will still be applied by .rotate()
+    // and withoutEnlargement: true prevents making it larger.
+    resizeOptions.width = metadata.width;
+    resizeOptions.height = metadata.height;
   } else {
     throw new Error('Invalid resolution parameter');
   }
