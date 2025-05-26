@@ -40,11 +40,21 @@ endpoints:
       agents:
         code: true
         tools: true
+    - name: OpenAI_Image_Generator
+      apiKey: ${OPENAI_API_KEY}
+      baseURL: https://api.openai.com/v1
+      models:
+        default:
+          - gpt-image-1
+        fetch: false
+      titleConvo: false
+      modelDisplayLabel: "OpenAI Image"
   openAI:
     apiKey: ${OPENAI_API_KEY}
     models:
       default:
-        - gpt-image-1
+        - gpt-4
+        - gpt-3.5-turbo
       fetch: false
     titleConvo: true
     titleModel: gpt-3.5-turbo
