@@ -18,7 +18,7 @@ endpoints:
       apiKey: ${OPENROUTER_KEY}
       baseURL: https://openrouter.ai/api/v1
       models:
-        fetch: false
+        fetch: true
         default:
           - google/gemini-2.5-flash-preview-05-20:thinking
           - google/gemini-2.5-pro-preview
@@ -46,13 +46,21 @@ endpoints:
     apiKey: ${OPENAI_API_KEY}
     models:
       default:
-        - gpt-4o
-        - gpt-4o-mini
+        - o1
+        - o1-mini
+        - o1-preview
+        - o3
+        - o3-mini
+        - o3-high
+        - o4
+        - o4-mini
+        - o4-mini-high
+        - o4-high
         - gpt-4.1
         - gpt-4.1-mini
         - gpt-4.1-nano
-        - gpt-image-1
-      fetch: false
+        - gpt-4.5
+      fetch: true
     titleConvo: false
     agents:
       code: true
