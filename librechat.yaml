@@ -20,9 +20,10 @@ endpoints:
       models:
         fetch: false
         default:
-          # Claude models (only Claude 4)
-          - anthropic/claude-opus-4
+          # Default model (appears first)
           - anthropic/claude-sonnet-4
+          # Other Claude models
+          - anthropic/claude-opus-4
           - anthropic/claude-3.7-sonnet
           - anthropic/claude-3.7-sonnet:thinking
           # Google models (no free versions)
@@ -69,18 +70,18 @@ endpoints:
       agents:
         code: true
         tools: true
-  openAI:
-    apiKey: ${OPENAI_API_KEY}
-    models:
-      default:
-        # Only for image generation
-        - dall-e-3
-        - dall-e-2
-      fetch: false
-    titleConvo: false
-    agents:
-      code: true
-      tools: true
+  # openAI:
+  #   apiKey: ${OPENAI_API_KEY}
+  #   models:
+  #     default:
+  #       # Only for image generation
+  #       - dall-e-3
+  #       - dall-e-2
+  #     fetch: false
+  #   titleConvo: false
+  #   agents:
+  #     code: true
+  #     tools: true
 
 fileConfig:
   endpoints:
