@@ -32,6 +32,7 @@ const openAIModels = {
   'gpt-3.5-turbo-16k-0613': 16375, // -10 from max
   'gpt-3.5-turbo-1106': 16375, // -10 from max
   'gpt-3.5-turbo-0125': 16375, // -10 from max
+  'gpt-image-1': 16384, // Added for gpt-image-1, providing a reasonable context window
 };
 
 const mistralModels = {
