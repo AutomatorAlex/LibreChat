@@ -70,18 +70,8 @@ endpoints:
       agents:
         code: true
         tools: true
-  # openAI:
-  #   apiKey: ${OPENAI_API_KEY}
-  #   models:
-  #     default:
-  #       # Only for image generation
-  #       - dall-e-3
-  #       - dall-e-2
-  #     fetch: false
-  #   titleConvo: false
-  #   agents:
-  #     code: true
-  #     tools: true
+  openAI:
+    disabled: true
 
 fileConfig:
   endpoints:
