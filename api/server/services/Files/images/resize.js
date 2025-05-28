@@ -7,51 +7,24 @@ const { EModelEndpoint } = require('librechat-data-provider');
  * @param {Buffer} inputBuffer - The buffer of the image to be resized.
  * @param {'low' | 'high'} resolution - The resolution to resize the image to.
  *                                      'low' for a maximum of 512x512 resolution,
- *                                      'high' for a maximum of 768x2000 resolution.
+ *                                      'high' preserves original dimensions (uncapped).
  * @param {EModelEndpoint} endpoint - Identifier for specific endpoint handling
  * @returns {Promise<{buffer: Buffer, width: number, height: number}>} An object containing the resized image buffer and its dimensions.
  * @throws Will throw an error if the resolution parameter is invalid.
  */
 async function resizeImageBuffer(inputBuffer, resolution, endpoint) {
   const maxLowRes = 512;
-  const maxShortSideHighRes = 768; // Reverted to original 768px cap
-  const maxLongSideHighRes = endpoint === EModelEndpoint.anthropic ? 1568 : 2000;
 
-  let newWidth, newHeight; // Re-added for original logic
   let resizeOptions = { fit: 'inside', withoutEnlargement: true };
 
   if (resolution === 'low') {
     resizeOptions.width = maxLowRes;
     resizeOptions.height = maxLowRes;
   } else if (resolution === 'high') {
+    // For 'high' resolution, use original dimensions (uncapped)
     const metadata = await sharp(inputBuffer).metadata();
-    const isWidthShorter = metadata.width < metadata.height;
-
-    // Original resizing logic for 'high' resolution
-    if (isWidthShorter) {
-      // Width is the shorter side
-      newWidth = Math.min(metadata.width, maxShortSideHighRes);
-      // Calculate new height to maintain aspect ratio
-      newHeight = Math.round((metadata.height / metadata.width) * newWidth);
-      // Ensure the long side does not exceed the maximum allowed
-      if (newHeight > maxLongSideHighRes) {
-        newHeight = maxLongSideHighRes;
-        newWidth = Math.round((metadata.width / metadata.height) * newHeight);
-      }
-    } else {
-      // Height is the shorter side
-      newHeight = Math.min(metadata.height, maxShortSideHighRes);
-      // Calculate new width to maintain aspect ratio
-      newWidth = Math.round((metadata.width / metadata.height) * newHeight);
-      // Ensure the long side does not exceed the maximum allowed
-      if (newWidth > maxLongSideHighRes) {
-        newWidth = maxLongSideHighRes;
-        newHeight = Math.round((metadata.height / metadata.width) * newWidth);
-      }
-    }
-
-    resizeOptions.width = newWidth;
-    resizeOptions.height = newHeight;
+    resizeOptions.width = metadata.width;
+    resizeOptions.height = metadata.height;
   } else {
     throw new Error('Invalid resolution parameter');
   }
