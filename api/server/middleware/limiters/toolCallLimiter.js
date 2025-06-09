@@ -21,7 +21,7 @@ const handler = async (req, res) => {
 
 const limiterOptions = {
   windowMs: 1000,
-  max: 10,  // Allow 10 tool calls per second
+  max: 10, // Allow 10 tool calls per second
   handler,
   keyGenerator: function (req) {
     return req.user?.id;
