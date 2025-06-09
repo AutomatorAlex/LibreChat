@@ -10,7 +10,7 @@ const handler = async (req, res) => {
   const type = ViolationTypes.TOOL_CALL_LIMIT;
   const errorMessage = {
     type,
-    max: 1,
+    max: 10,
     limiter: 'user',
     windowInMinutes: 1,
   };
@@ -21,7 +21,7 @@ const handler = async (req, res) => {
 
 const limiterOptions = {
   windowMs: 1000,
-  max: 1,
+  max: 10,  // Allow 10 tool calls per second
   handler,
   keyGenerator: function (req) {
     return req.user?.id;
