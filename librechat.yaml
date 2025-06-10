@@ -54,16 +54,13 @@ endpoints:
         default:
           # Default model (appears first) - :nitro for highest throughput
           - anthropic/claude-sonnet-4:nitro
-          # Other Claude models
+          # Other Claude models (all with nitro for max throughput)
           - anthropic/claude-opus-4:nitro
           - anthropic/claude-3.7-sonnet:nitro
-          - anthropic/claude-3.7-sonnet:thinking:nitro
-          # Google models (no free versions)
+          # Google models (all with nitro for max throughput)
           - google/gemini-2.5-flash-preview-05-20:nitro
-          - google/gemini-2.5-flash-preview-05-20:thinking:nitro
           - google/gemini-2.5-pro-preview:nitro
           - google/gemini-2.5-flash-preview:nitro
-          - google/gemini-2.5-flash-preview:thinking:nitro
           # Mistral models
           - mistralai/mistral-large-2411:nitro
           - mistralai/mistral-large-2407:nitro
