@@ -1155,6 +1155,11 @@ ${convo}
         modelOptions.prompt = payload;
       }
 
+      // Add OpenRouter provider routing if specified
+      if (this.useOpenRouter && this.options.providerRouting) {
+        modelOptions.provider = this.options.providerRouting;
+      }
+
       const baseURL = extractBaseURL(this.completionsUrl);
       logger.debug('[OpenAIClient] chatCompletion', { baseURL, modelOptions });
       const opts = {

@@ -14,6 +14,38 @@ interface:
 
 endpoints:
   custom:
+    # Cerebras-optimized models via OpenRouter
+    - name: "OpenRouter (Cerebras)"
+      apiKey: ${OPENROUTER_KEY}
+      baseURL: https://openrouter.ai/api/v1
+      models:
+        fetch: false
+        default:
+          # Cerebras-supported models only
+          - meta-llama/llama-3.3-70b-instruct
+          - meta-llama/llama-3.1-70b-instruct
+          - meta-llama/llama-3.1-8b-instruct
+          - deepseek/deepseek-r1-distill-llama-70b
+          - qwen/qwen3-32b-instruct
+
+      titleConvo: true
+      titleModel: meta-llama/llama-3.1-8b-instruct
+      dropParams:
+        - stop
+      modelDisplayLabel: "OpenRouter (Cerebras)"
+      # Force all requests through Cerebras
+      providerRouting:
+        order:
+          - cerebras
+        allow_fallbacks: false
+      plugins:
+        - id: web
+          max_results: 15
+      agents:
+        code: true
+        tools: true
+
+    # Regular OpenRouter with throughput-optimized routing
     - name: OpenRouter
       apiKey: ${OPENROUTER_KEY}
       baseURL: https://openrouter.ai/api/v1
@@ -32,13 +64,6 @@ endpoints:
           - google/gemini-2.5-pro-preview
           - google/gemini-2.5-flash-preview
           - google/gemini-2.5-flash-preview:thinking
-          # Meta Llama models (no free versions)
-          - meta-llama/llama-3.3-70b-instruct
-          - meta-llama/llama-3.2-90b-vision-instruct
-          - meta-llama/llama-3.2-11b-vision-instruct
-          - meta-llama/llama-3.1-405b-instruct
-          - meta-llama/llama-3.1-70b-instruct
-          - meta-llama/llama-3.1-8b-instruct
           # Mistral models
           - mistralai/mistral-large-2411
           - mistralai/mistral-large-2407
@@ -56,7 +81,10 @@ endpoints:
           - openai/o1-mini
           - openai/o4-mini
           - openai/o4-mini-high
-          # Llama Models
+          # Llama Models (using throughput-optimized routing)
+          - meta-llama/llama-3.2-90b-vision-instruct
+          - meta-llama/llama-3.2-11b-vision-instruct
+          - meta-llama/llama-3.1-405b-instruct
           - nvidia/llama-3.1-nemotron-ultra-253b-v1
           # Other popular models
           - x-ai/grok-beta
@@ -68,6 +96,9 @@ endpoints:
       dropParams:
         - stop
       modelDisplayLabel: OpenRouter
+      # Prioritize highest throughput providers
+      providerRouting:
+        sort: "throughput"
       plugins:
         - id: web
           max_results: 15
