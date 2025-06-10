@@ -45,60 +45,57 @@ endpoints:
         code: true
         tools: true
 
-    # Regular OpenRouter with throughput-optimized routing
+    # Regular OpenRouter with throughput-optimized routing (:nitro shortcut)
     - name: OpenRouter
       apiKey: ${OPENROUTER_KEY}
       baseURL: https://openrouter.ai/api/v1
       models:
         fetch: false
         default:
-          # Default model (appears first)
-          - anthropic/claude-sonnet-4
+          # Default model (appears first) - :nitro for highest throughput
+          - anthropic/claude-sonnet-4:nitro
           # Other Claude models
-          - anthropic/claude-opus-4
-          - anthropic/claude-3.7-sonnet
+          - anthropic/claude-opus-4:nitro
+          - anthropic/claude-3.7-sonnet:nitro
           - anthropic/claude-3.7-sonnet:thinking
           # Google models (no free versions)
-          - google/gemini-2.5-flash-preview-05-20
+          - google/gemini-2.5-flash-preview-05-20:nitro
           - google/gemini-2.5-flash-preview-05-20:thinking
-          - google/gemini-2.5-pro-preview
-          - google/gemini-2.5-flash-preview
+          - google/gemini-2.5-pro-preview:nitro
+          - google/gemini-2.5-flash-preview:nitro
           - google/gemini-2.5-flash-preview:thinking
           # Mistral models
-          - mistralai/mistral-large-2411
-          - mistralai/mistral-large-2407
-          - mistralai/mistral-medium-3
-          - mistralai/mistral-small-3.1-24b-instruct
-          - mistralai/mistral-small-24b-instruct-2501
-          - mistralai/mistral-nemo
-          - mistralai/mistral-7b-instruct
+          - mistralai/mistral-large-2411:nitro
+          - mistralai/mistral-large-2407:nitro
+          - mistralai/mistral-medium-3:nitro
+          - mistralai/mistral-small-3.1-24b-instruct:nitro
+          - mistralai/mistral-small-24b-instruct-2501:nitro
+          - mistralai/mistral-nemo:nitro
+          - mistralai/mistral-7b-instruct:nitro
           # OpenAI models (accessed through OpenRouter)
-          - openai/gpt-4.1
-          - openai/gpt-4.1-mini
-          - openai/gpt-4.1-nano
-          - openai/gpt-4.5-preview
-          - openai/o1-preview
-          - openai/o1-mini
-          - openai/o4-mini
-          - openai/o4-mini-high
+          - openai/gpt-4.1:nitro
+          - openai/gpt-4.1-mini:nitro
+          - openai/gpt-4.1-nano:nitro
+          - openai/gpt-4.5-preview:nitro
+          - openai/o1-preview:nitro
+          - openai/o1-mini:nitro
+          - openai/o4-mini:nitro
+          - openai/o4-mini-high:nitro
           # Llama Models (using throughput-optimized routing)
-          - meta-llama/llama-3.2-90b-vision-instruct
-          - meta-llama/llama-3.2-11b-vision-instruct
-          - meta-llama/llama-3.1-405b-instruct
-          - nvidia/llama-3.1-nemotron-ultra-253b-v1
+          - meta-llama/llama-3.2-90b-vision-instruct:nitro
+          - meta-llama/llama-3.2-11b-vision-instruct:nitro
+          - meta-llama/llama-3.1-405b-instruct:nitro
+          - nvidia/llama-3.1-nemotron-ultra-253b-v1:nitro
           # Other popular models
-          - x-ai/grok-beta
-          - qwen/qwen-2.5-72b-instruct
-          - qwen/qwen3-235b-a22b
+          - x-ai/grok-beta:nitro
+          - qwen/qwen-2.5-72b-instruct:nitro
+          - qwen/qwen3-235b-a22b:nitro
 
       titleConvo: true
-      titleModel: openai/gpt-4.1-nano
+      titleModel: openai/gpt-4.1-nano:nitro
       dropParams:
         - stop
       modelDisplayLabel: OpenRouter
-      # Prioritize highest throughput providers
-      providerRouting:
-        sort: "throughput"
       plugins:
         - id: web
           max_results: 15
