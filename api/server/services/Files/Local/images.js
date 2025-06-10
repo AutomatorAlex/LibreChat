@@ -4,6 +4,7 @@ const sharp = require('sharp');
 const { resizeImageBuffer } = require('../images/resize');
 const { updateUser } = require('~/models/userMethods');
 const { updateFile } = require('~/models/File');
+const { logger } = require('~/config');
 
 /**
  * Converts an image file to the target format. The function first resizes the image based on the specified
@@ -106,15 +107,64 @@ async function prepareImagesLocal(req, file) {
 }
 
 /**
+ * Cleans up old avatar files for a user, keeping only the most recent ones.
+ * @param {string} userDir - The user's avatar directory path.
+ * @param {number} keepCount - Number of recent avatar files to keep (default: 3).
+ * @returns {Promise<void>}
+ */
+async function cleanupOldAvatars(userDir, keepCount = 3) {
+  try {
+    if (!fs.existsSync(userDir)) {
+      return;
+    }
+
+    const files = await fs.promises.readdir(userDir);
+    const avatarFiles = files
+      .filter((file) => file.startsWith('avatar-') && file.endsWith('.png'))
+      .map((file) => {
+        const filePath = path.join(userDir, file);
+        const stats = fs.statSync(filePath);
+        return {
+          name: file,
+          path: filePath,
+          mtime: stats.mtime,
+        };
+      })
+      .sort((a, b) => b.mtime - a.mtime); // Sort by modification time, newest first
+
+    // Keep only the most recent files, delete the rest
+    if (avatarFiles.length > keepCount) {
+      const filesToDelete = avatarFiles.slice(keepCount);
+
+      for (const file of filesToDelete) {
+        try {
+          await fs.promises.unlink(file.path);
+          logger.debug(`[cleanupOldAvatars] Deleted old avatar: ${file.name}`);
+        } catch (error) {
+          logger.warn(`[cleanupOldAvatars] Failed to delete ${file.name}:`, error);
+        }
+      }
+
+      logger.debug(
+        `[cleanupOldAvatars] Cleaned up ${filesToDelete.length} old avatar files for user`,
+      );
+    }
+  } catch (error) {
+    logger.error('[cleanupOldAvatars] Error during avatar cleanup:', error);
+  }
+}
+
+/**
  * Uploads a user's avatar to local server storage and returns the URL.
  * If the 'manual' flag is set to 'true', it also updates the user's avatar URL in the database.
+ * This version includes cleanup of old avatar files to prevent accumulation.
  *
  * @param {object} params - The parameters object.
  * @param {Buffer} params.buffer - The Buffer containing the avatar image.
  * @param {string} params.userId - The user ID.
  * @param {string} params.manual - A string flag indicating whether the update is manual ('true' or 'false').
  * @returns {Promise<string>} - A promise that resolves with the URL of the uploaded avatar.
- * @throws {Error} - Throws an error if Firebase is not initialized or if there is an error in uploading.
+ * @throws {Error} - Throws an error if there is an error in uploading or cleanup.
  */
 async function processLocalAvatar({ buffer, userId, manual }) {
   const userDir = path.resolve(
@@ -134,17 +184,30 @@ async function processLocalAvatar({ buffer, userId, manual }) {
   const urlRoute = `/images/${userId}/${fileName}`;
   const avatarPath = path.join(userDir, fileName);
 
-  await fs.promises.mkdir(userDir, { recursive: true });
-  await fs.promises.writeFile(avatarPath, buffer);
+  try {
+    // Ensure user directory exists
+    await fs.promises.mkdir(userDir, { recursive: true });
 
-  const isManual = manual === 'true';
-  let url = `${urlRoute}?manual=${isManual}`;
+    // Write the new avatar file
+    await fs.promises.writeFile(avatarPath, buffer);
+    logger.debug(`[processLocalAvatar] Avatar saved: ${fileName} for user ${userId}`);
 
-  if (isManual) {
-    await updateUser(userId, { avatar: url });
+    // Clean up old avatar files (keep 3 most recent)
+    await cleanupOldAvatars(userDir, 3);
+
+    const isManual = manual === 'true';
+    let url = `${urlRoute}?manual=${isManual}`;
+
+    if (isManual) {
+      await updateUser(userId, { avatar: url });
+      logger.debug(`[processLocalAvatar] User avatar URL updated in database: ${url}`);
+    }
+
+    return url;
+  } catch (error) {
+    logger.error(`[processLocalAvatar] Error processing avatar for user ${userId}:`, error);
+    throw error;
   }
-
-  return url;
 }
 
 module.exports = { uploadLocalImage, encodeImage, prepareImagesLocal, processLocalAvatar };
