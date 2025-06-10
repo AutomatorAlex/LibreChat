@@ -1,43 +1,18 @@
 import { useMemo } from 'react';
-import { createAvatar } from '@dicebear/core';
-import { initials } from '@dicebear/collection';
 import type { TUser } from 'librechat-data-provider';
 
-const avatarCache: Record<string, string> = {};
+// Default logo path - using your custom logo instead of generated avatars
+const DEFAULT_LOGO_PATH = '/assets/logo.webp';
 
 const useAvatar = (user: TUser | undefined) => {
   return useMemo(() => {
-    const { username, name } = user ?? {};
-    const seed = name || username;
-    if (!seed) {
-      return '';
-    }
-
+    // If user has a custom avatar, use it
     if (user?.avatar && user?.avatar !== '') {
       return user.avatar;
     }
 
-    if (avatarCache[seed]) {
-      return avatarCache[seed];
-    }
-
-    const avatar = createAvatar(initials, {
-      seed,
-      fontFamily: ['Verdana'],
-      fontSize: 36,
-    });
-
-    let avatarDataUri = '';
-    try {
-      avatarDataUri = avatar.toDataUri();
-      if (avatarDataUri) {
-        avatarCache[seed] = avatarDataUri;
-      }
-    } catch (error) {
-      console.error('Failed to generate avatar:', error);
-    }
-
-    return avatarDataUri;
+    // Otherwise, use your custom logo as the default avatar
+    return DEFAULT_LOGO_PATH;
   }, [user]);
 };
 
