@@ -199,12 +199,12 @@ mcpServers:
   # Working N8N MCPs (keep these as SSE)
   n8n-business-tools-mcp:
     type: sse
-    url: ${N8N_BUSINESS_TOOLS_URL}
+    url: https://n8n.metamation.net/mcp/12bd30ab-6657-4d89-95f7-5e6c818d81e6/sse
     timeout: 30000
     initTimeout: 15000
     
   n8n-outlook-mcp:
     type: sse
-    url: ${N8N_OUTLOOK_URL}
+    url: https://n8n.metamation.net/mcp/97a5106e-0b1a-4b61-8818-937f81d6932c/sse
     timeout: 30000
     initTimeout: 15000
