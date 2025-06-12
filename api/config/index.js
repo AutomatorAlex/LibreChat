@@ -13,12 +13,20 @@ class AuthEventSource extends RawEventSource {
    */
   constructor(url, options = {}) {
     // If this is an N8N MCP endpoint, ensure Authorization header is included
-    if (url.includes('n8n.metamation.net') && process.env.N8N_API_KEY) {
+    if (url.includes('n8n.metamation.net')) {
+      logger.info(`[AuthEventSource] Intercepting N8N SSE connection to: ${url}`);
       options = options || {};
       options.headers = options.headers || {};
-      if (!options.headers.Authorization && !options.headers['X-N8N-API-KEY']) {
+
+      // Always inject the Bearer token for N8N endpoints
+      if (process.env.N8N_API_KEY) {
         options.headers.Authorization = `Bearer ${process.env.N8N_API_KEY}`;
+        logger.info(`[AuthEventSource] Added Authorization header for N8N endpoint`);
+      } else {
+        logger.warn(`[AuthEventSource] N8N_API_KEY environment variable not found`);
       }
+
+      logger.info(`[AuthEventSource] Final options:`, JSON.stringify(options, null, 2));
     }
     super(url, options);
   }
