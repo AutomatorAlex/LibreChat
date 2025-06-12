@@ -4,7 +4,7 @@ const { Time, CacheKeys } = require('librechat-data-provider');
 const { MCPManager, FlowStateManager } = require('librechat-mcp');
 const logger = require('./winston');
 
-// Patch EventSource to support custom headers
+// Patch EventSource to support custom headers for N8N endpoints
 const RawEventSource = EventSource;
 class AuthEventSource extends RawEventSource {
   /**
@@ -12,6 +12,14 @@ class AuthEventSource extends RawEventSource {
    * @param {object} [options]
    */
   constructor(url, options = {}) {
+    // If this is an N8N MCP endpoint, ensure Authorization header is included
+    if (url.includes('n8n.metamation.net') && process.env.N8N_API_KEY) {
+      options = options || {};
+      options.headers = options.headers || {};
+      if (!options.headers.Authorization && !options.headers['X-N8N-API-KEY']) {
+        options.headers.Authorization = `Bearer ${process.env.N8N_API_KEY}`;
+      }
+    }
     super(url, options);
   }
 }
