@@ -1,37 +1,50 @@
 const axios = require('axios');
-const { EventSource } = require('eventsource');
 const { Time, CacheKeys } = require('librechat-data-provider');
-const { MCPManager, FlowStateManager } = require('librechat-mcp');
 const logger = require('./winston');
 
-// Patch EventSource to support custom headers for N8N endpoints
-const RawEventSource = EventSource;
-class AuthEventSource extends RawEventSource {
-  /**
-   * @param {string} url
-   * @param {object} [options]
-   */
-  constructor(url, options = {}) {
-    // If this is an N8N MCP endpoint, ensure Authorization header is included
-    if (url.includes('n8n.metamation.net')) {
-      logger.info(`[AuthEventSource] Intercepting N8N SSE connection to: ${url}`);
-      options = options || {};
-      options.headers = options.headers || {};
+// Patch EventSource at module level before any other imports
+const Module = require('module');
+const originalRequire = Module.prototype.require;
 
-      // Always inject the Bearer token for N8N endpoints
-      if (process.env.N8N_API_KEY) {
-        options.headers.Authorization = `Bearer ${process.env.N8N_API_KEY}`;
-        logger.info(`[AuthEventSource] Added Authorization header for N8N endpoint`);
-      } else {
-        logger.warn(`[AuthEventSource] N8N_API_KEY environment variable not found`);
+Module.prototype.require = function (...args) {
+  const module = originalRequire.apply(this, args);
+
+  // Patch eventsource module when it's required
+  if (args[0] === 'eventsource' && module.EventSource) {
+    const RawEventSource = module.EventSource;
+
+    class AuthEventSource extends RawEventSource {
+      constructor(url, options = {}) {
+        if (url.includes('n8n.metamation.net')) {
+          logger.info(`[AuthEventSource] Intercepting N8N SSE connection to: ${url}`);
+          options = options || {};
+          options.headers = options.headers || {};
+
+          if (process.env.N8N_API_KEY) {
+            options.headers.Authorization = `Bearer ${process.env.N8N_API_KEY}`;
+            logger.info(`[AuthEventSource] Added Authorization header for N8N endpoint`);
+          } else {
+            logger.warn(`[AuthEventSource] N8N_API_KEY environment variable not found`);
+          }
+
+          logger.info(`[AuthEventSource] Final options:`, JSON.stringify(options, null, 2));
+        }
+        super(url, options);
       }
-
-      logger.info(`[AuthEventSource] Final options:`, JSON.stringify(options, null, 2));
     }
-    super(url, options);
+
+    module.EventSource = AuthEventSource;
+    logger.info(`[AuthEventSource] Patched eventsource module successfully`);
   }
-}
-global.EventSource = AuthEventSource;
+
+  return module;
+};
+
+const { EventSource } = require('eventsource');
+const { MCPManager, FlowStateManager } = require('librechat-mcp');
+
+// Also set global for any direct global usage
+global.EventSource = EventSource;
 
 /** @type {MCPManager} */
 let mcpManager = null;
