@@ -198,7 +198,7 @@ mcpServers:
 
   # Working N8N MCPs (keep these as SSE)
   n8n-business-tools-mcp:
-    type: sse
+    type: streamable-http
     url: https://n8n.metamation.net/mcp/12bd30ab-6657-4d89-95f7-5e6c818d81e6/sse
     headers:
       X-N8N-API-KEY: "${N8N_API_KEY}"
