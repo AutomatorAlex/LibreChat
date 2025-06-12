@@ -4,7 +4,18 @@ const { Time, CacheKeys } = require('librechat-data-provider');
 const { MCPManager, FlowStateManager } = require('librechat-mcp');
 const logger = require('./winston');
 
-global.EventSource = EventSource;
+// Patch EventSource to support custom headers
+const RawEventSource = EventSource;
+class AuthEventSource extends RawEventSource {
+  /**
+   * @param {string} url
+   * @param {object} [options]
+   */
+  constructor(url, options = {}) {
+    super(url, options);
+  }
+}
+global.EventSource = AuthEventSource;
 
 /** @type {MCPManager} */
 let mcpManager = null;
