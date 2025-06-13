@@ -160,8 +160,8 @@ function ToolSelectDialog({
       {/* Full-screen container to center the panel */}
       <div className="fixed inset-0 flex items-center justify-center p-4">
         <DialogPanel
-          className="relative w-full transform overflow-hidden overflow-y-auto rounded-lg bg-surface-secondary text-left shadow-xl transition-all max-sm:h-full sm:mx-7 sm:my-8 sm:max-w-2xl lg:max-w-5xl xl:max-w-7xl"
-          style={{ minHeight: '610px' }}
+          className="relative w-full transform overflow-hidden rounded-lg bg-surface-secondary text-left shadow-xl transition-all max-sm:h-full sm:mx-7 sm:my-8 sm:max-w-2xl lg:max-w-5xl xl:max-w-7xl"
+          style={{ minHeight: '610px', maxHeight: '90vh' }}
         >
           <div className="flex items-center justify-between border-b-[1px] border-border-medium px-4 pb-4 pt-5 sm:p-6">
             <div className="flex items-center">
@@ -209,7 +209,7 @@ function ToolSelectDialog({
               />
             </div>
           )}
-          <div className="p-4 sm:p-6 sm:pt-4">
+          <div className="flex h-full flex-col overflow-hidden p-4 sm:p-6 sm:pt-4">
             <div className="mt-4 flex flex-col gap-4">
               <div className="flex items-center justify-center space-x-4">
                 <Search className="h-6 w-6 text-text-tertiary" />
@@ -223,8 +223,8 @@ function ToolSelectDialog({
               </div>
               <div
                 ref={gridRef}
-                className="flex-grow overflow-y-auto"
-                style={{ minHeight: '410px' }}
+                className="flex-1 overflow-y-auto"
+                style={{ minHeight: '410px', maxHeight: '60vh' }}
               >
                 {groupedTools &&
                   Object.entries(groupedTools)
