@@ -9,12 +9,14 @@ import type {
   EModelEndpoint,
   TPluginAction,
   TError,
+  TPlugin,
 } from 'librechat-data-provider';
 import type { TPluginStoreDialogProps } from '~/common/types';
 import { PluginPagination, PluginAuthForm } from '~/components/Plugins/Store';
 import { useLocalize, usePluginDialogHelpers } from '~/hooks';
 import { useAvailableToolsQuery } from '~/data-provider';
 import ToolItem from './ToolItem';
+import ToolGroup from './ToolGroup';
 
 function ToolSelectDialog({
   isOpen,
@@ -121,24 +123,27 @@ function ToolSelectDialog({
     tool.name.toLowerCase().includes(searchValue.toLowerCase()),
   );
 
+  const groupedTools = filteredTools?.reduce(
+    (acc, tool) => {
+      const serverName = tool.server_name || 'General';
+      if (!acc[serverName]) {
+        acc[serverName] = [];
+      }
+      acc[serverName].push(tool);
+      return acc;
+    },
+    {} as Record<string, TPlugin[]>,
+  );
+
   useEffect(() => {
-    if (filteredTools) {
-      setMaxPage(Math.ceil(filteredTools.length / itemsPerPage));
+    if (groupedTools) {
+      setMaxPage(Math.ceil(Object.keys(groupedTools).length / itemsPerPage));
       if (searchChanged) {
         setCurrentPage(1);
         setSearchChanged(false);
       }
     }
-  }, [
-    tools,
-    itemsPerPage,
-    searchValue,
-    filteredTools,
-    searchChanged,
-    setMaxPage,
-    setCurrentPage,
-    setSearchChanged,
-  ]);
+  }, [groupedTools, itemsPerPage, searchChanged, setMaxPage, setCurrentPage, setSearchChanged]);
 
   return (
     <Dialog
@@ -218,19 +223,20 @@ function ToolSelectDialog({
               </div>
               <div
                 ref={gridRef}
-                className="grid grid-cols-1 grid-rows-2 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+                className="flex-grow overflow-y-auto"
                 style={{ minHeight: '410px' }}
               >
-                {filteredTools &&
-                  filteredTools
+                {groupedTools &&
+                  Object.entries(groupedTools)
                     .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
-                    .map((tool, index) => (
-                      <ToolItem
-                        key={index}
-                        tool={tool}
-                        isInstalled={getValues(toolsFormKey).includes(tool.pluginKey)}
-                        onAddTool={() => onAddTool(tool.pluginKey)}
-                        onRemoveTool={() => onRemoveTool(tool.pluginKey)}
+                    .map(([serverName, tools]) => (
+                      <ToolGroup
+                        key={serverName}
+                        serverName={serverName}
+                        tools={tools}
+                        isInstalled={(pluginKey) => getValues(toolsFormKey).includes(pluginKey)}
+                        onAddTool={onAddTool}
+                        onRemoveTool={onRemoveTool}
                       />
                     ))}
               </div>
