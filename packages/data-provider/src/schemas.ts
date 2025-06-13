@@ -420,6 +420,7 @@ export const tPluginSchema = z.object({
   chatMenu: z.boolean().optional(),
   isButton: z.boolean().optional(),
   toolkit: z.boolean().optional(),
+  server_name: z.string().optional(),
 });
 
 export type TPlugin = z.infer<typeof tPluginSchema>;

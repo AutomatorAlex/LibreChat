@@ -390,6 +390,7 @@ export class MCPManager {
             pluginKey,
             description: tool.description ?? '',
             icon: connection.iconPath,
+            server_name: serverName,
           };
           const config = this.mcpConfigs[serverName];
           if (config?.chatMenu === false) {
