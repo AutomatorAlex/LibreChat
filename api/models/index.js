@@ -7,6 +7,7 @@ const {
   createUser,
   countUsers,
   findUser,
+  hashPassword,
 } = require('./userMethods');
 const {
   findFileById,
@@ -44,6 +45,7 @@ const Key = require('./Key');
 
 module.exports = {
   comparePassword,
+  hashPassword,
   deleteUserById,
   generateToken,
   getUserById,

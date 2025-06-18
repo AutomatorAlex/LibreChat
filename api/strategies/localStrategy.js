@@ -1,6 +1,6 @@
 const { errorsToString } = require('librechat-data-provider');
 const { Strategy: PassportLocalStrategy } = require('passport-local');
-const { findUser, comparePassword, updateUser } = require('~/models');
+const { findUser, comparePassword, updateUser, hashPassword } = require('~/models');
 const { isEnabled, checkEmailConfig } = require('~/server/utils');
 const { loginSchema } = require('./validators');
 const logger = require('~/utils/logger');
