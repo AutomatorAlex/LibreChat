@@ -58,9 +58,8 @@ endpoints:
           - anthropic/claude-opus-4:nitro
           - anthropic/claude-3.7-sonnet:nitro
           # Google models (all with nitro for max throughput)
-          - google/gemini-2.5-flash-preview-05-20:nitro
-          - google/gemini-2.5-pro-preview:nitro
-          - google/gemini-2.5-flash-preview:nitro
+          - google/gemini-2.5-flash:nitro
+          - google/gemini-2.5-pro:nitro
           # Mistral models
           - mistralai/mistral-large-2411:nitro
           - mistralai/mistral-large-2407:nitro
@@ -79,14 +78,18 @@ endpoints:
           - openai/o4-mini:nitro
           - openai/o4-mini-high:nitro
           # Llama Models (using throughput-optimized routing)
+          - meta-llama/llama-4-maverick:nitro
+          - meta-llama/llama-3.3-70b-instruct:nitro
           - meta-llama/llama-3.2-90b-vision-instruct:nitro
           - meta-llama/llama-3.2-11b-vision-instruct:nitro
           - meta-llama/llama-3.1-405b-instruct:nitro
           - nvidia/llama-3.1-nemotron-ultra-253b-v1:nitro
           # Other popular models
-          - x-ai/grok-beta:nitro
-          - qwen/qwen-2.5-72b-instruct:nitro
+          - x-ai/grok-3-beta:nitro
+          - x-ai/grok-3-mini-beta:nitro
           - qwen/qwen3-235b-a22b:nitro
+          # MiniMax
+          - minimax/minimax-m1:nitro
 
       titleConvo: true
       titleModel: openai/gpt-4.1-nano:nitro

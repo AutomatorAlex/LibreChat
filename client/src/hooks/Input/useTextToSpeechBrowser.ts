@@ -27,13 +27,28 @@ function useTextToSpeechBrowser({
         return;
       }
 
-      const filteredVoices = availableVoices.filter(
-        (v) => cloudBrowserVoices || v.localService === true,
+      const filteredVoices = availableVoices.filter((v) =>
+        cloudBrowserVoices ? true : v.localService === true,
       );
-      const voiceOptions: VoiceOption[] = filteredVoices.map((v) => ({
-        value: v.name,
-        label: v.name,
-      }));
+
+      const voiceOptions: VoiceOption[] = filteredVoices
+        .map((v) => ({
+          value: v.name,
+          label: `${v.name} (${v.lang})`,
+          lang: v.lang,
+        }))
+        .sort((a, b) => {
+          const aIsEnglish = a.lang?.startsWith('en');
+          const bIsEnglish = b.lang?.startsWith('en');
+
+          if (aIsEnglish && !bIsEnglish) {
+            return -1;
+          }
+          if (!aIsEnglish && bIsEnglish) {
+            return 1;
+          }
+          return 0;
+        });
 
       setVoices(voiceOptions);
     } catch (error) {

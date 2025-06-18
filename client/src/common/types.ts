@@ -453,6 +453,7 @@ export type StringOption = Option & { value: string | null };
 export type VoiceOption = {
   value: string;
   label: string;
+  lang?: string;
 };
 
 export type TMessageAudio = {
