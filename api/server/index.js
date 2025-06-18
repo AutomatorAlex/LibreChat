@@ -132,7 +132,7 @@ const startServer = async () => {
     res.send(updatedIndexHtml);
   });
 
-  app.listen(port, host, () => {
+  const server = app.listen(port, host, () => {
     if (host === '0.0.0.0') {
       logger.info(
         `Server listening on all interfaces at port ${port}. Use http://localhost:${port} to access it`,
@@ -141,6 +141,13 @@ const startServer = async () => {
       logger.info(`Server listening at http://${host == '0.0.0.0' ? 'localhost' : host}:${port}`);
     }
   });
+
+  server.on('error', (err) => {
+    logger.error(err);
+    process.exit(1);
+  });
+
+  server.timeout = 300000; // 5 minutes
 };
 
 startServer();

@@ -164,7 +164,7 @@ mcpServers:
     url: https://mcps.netlify.app/.netlify/functions/mcp-exa
     headers:
       X-MCP-API-Key: "${MCP_API_KEY}"
-    timeout: 30000
+    timeout: 180000
     initTimeout: 15000
     
   openrouter:
@@ -172,7 +172,7 @@ mcpServers:
     url: https://mcps.netlify.app/.netlify/functions/mcp-openrouter
     headers:
       X-MCP-API-Key: "${MCP_API_KEY}"
-    timeout: 30000
+    timeout: 180000
     initTimeout: 15000
     
   sequential-thinking:
@@ -180,7 +180,7 @@ mcpServers:
     url: https://mcps.netlify.app/.netlify/functions/mcp-thinking
     headers:
       X-MCP-API-Key: "${MCP_API_KEY}"
-    timeout: 30000
+    timeout: 180000
     initTimeout: 15000
     
   stripe-toolkit:
@@ -188,7 +188,7 @@ mcpServers:
     url: https://mcps.netlify.app/.netlify/functions/mcp-stripe
     headers:
       X-MCP-API-Key: "${MCP_API_KEY}"
-    timeout: 30000
+    timeout: 180000
     initTimeout: 15000
 
   business-strategy:
@@ -196,7 +196,7 @@ mcpServers:
     url: https://mcps.netlify.app/.netlify/functions/mcp-business-strategy
     headers:
       X-MCP-API-Key: "${MCP_API_KEY}"
-    timeout: 30000
+    timeout: 180000
     initTimeout: 15000
 
   # Working N8N MCPs (keep these as SSE)
@@ -205,7 +205,7 @@ mcpServers:
     url: https://n8n.metamation.net/mcp/12bd30ab-6657-4d89-95f7-5e6c818d81e6/sse
     headers:
       Authorization: "Bearer ${N8N_API_KEY}"
-    timeout: 30000
+    timeout: 180000
     initTimeout: 15000
     
   n8n-outlook-mcp:
@@ -213,5 +213,5 @@ mcpServers:
     url: https://n8n.metamation.net/mcp/97a5106e-0b1a-4b61-8818-937f81d6932c/sse
     headers:
       Authorization: "Bearer ${N8N_API_KEY}"
-    timeout: 30000
+    timeout: 180000
     initTimeout: 15000
