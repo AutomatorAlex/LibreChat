@@ -167,43 +167,18 @@ const comparePassword = async (user, candidatePassword) => {
     throw new Error('No user provided');
   }
 
-  console.log('Candidate Password:', candidatePassword);
-  console.log('User Password Hash:', user.password);
   return new Promise((resolve, reject) => {
     bcrypt.compare(candidatePassword, user.password, (err, isMatch) => {
       if (err) {
-        console.error('Bcrypt comparison error:', err);
         reject(err);
       }
-      console.log('Password match result:', isMatch);
       resolve(isMatch);
-    });
-  });
-};
-
-const hashPassword = async function (password) {
-  console.log('Plaintext password to be hashed:', password);
-  return new Promise((resolve, reject) => {
-    bcrypt.genSalt(10, (err, salt) => {
-      if (err) {
-        console.error('Salt generation error:', err);
-        reject(err);
-      }
-      bcrypt.hash(password, salt, (err, hash) => {
-        if (err) {
-          console.error('Hashing error:', err);
-          reject(err);
-        }
-        console.log('Generated hash:', hash);
-        resolve(hash);
-      });
     });
   });
 };
 
 module.exports = {
   comparePassword,
-  hashPassword,
   deleteUserById,
   generateToken,
   getUserById,
