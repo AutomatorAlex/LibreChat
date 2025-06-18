@@ -13,6 +13,11 @@ interface:
   runCode: true
 
 endpoints:
+  agents:
+    # Default recursion depth for agents, increased from 25 to 50
+    recursionLimit: 50
+    # Maximum recursion depth for agents, set to 100 for complex tool chains
+    maxRecursionLimit: 100
   custom:
     # Cerebras-optimized models via OpenRouter
     - name: "OpenRouter (Cerebras)"
