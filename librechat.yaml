@@ -82,6 +82,7 @@ endpoints:
           - openai/o1-mini:nitro
           - openai/o4-mini:nitro
           - openai/o4-mini-high:nitro
+          - openai/gpt-4o:nitro
           # Llama Models (using throughput-optimized routing)
           - meta-llama/llama-4-maverick:nitro
           - meta-llama/llama-3.3-70b-instruct:nitro
