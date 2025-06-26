@@ -23,6 +23,7 @@ endpoints:
     - name: "OpenRouter (Cerebras)"
       apiKey: ${OPENROUTER_KEY}
       baseURL: https://openrouter.ai/api/v1
+      iconURL: "https://openrouter.ai/favicon.ico"
       models:
         fetch: false
         default:
@@ -46,6 +47,7 @@ endpoints:
     - name: "Anthropic (OpenRouter)"
       apiKey: ${OPENROUTER_KEY}
       baseURL: https://openrouter.ai/api/v1
+      iconURL: "https://avatars.githubusercontent.com/u/33350491?s=200&v=4"
       models:
         fetch: false
         default:
@@ -68,6 +70,7 @@ endpoints:
     - name: "OpenAI (OpenRouter)"
       apiKey: ${OPENROUTER_KEY}
       baseURL: https://openrouter.ai/api/v1
+      iconURL: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/openai/openai-original.svg"
       models:
         fetch: false
         default:
@@ -97,6 +100,7 @@ endpoints:
     - name: "Google (OpenRouter)"
       apiKey: ${OPENROUTER_KEY}
       baseURL: https://openrouter.ai/api/v1
+      iconURL: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/google/google-original.svg"
       models:
         fetch: false
         default:
@@ -118,6 +122,7 @@ endpoints:
     - name: "Mistral (OpenRouter)"
       apiKey: ${OPENROUTER_KEY}
       baseURL: https://openrouter.ai/api/v1
+      iconURL: "https://mistral.ai/images/logo_hubc88c4ece131b91c7cb753f40e9e1cc5_2589_256x0_resize_q97_h2_lanczos_3.webp"
       models:
         fetch: false
         default:
@@ -144,6 +149,7 @@ endpoints:
     - name: "Meta Llama (OpenRouter)"
       apiKey: ${OPENROUTER_KEY}
       baseURL: https://openrouter.ai/api/v1
+      iconURL: "https://upload.wikimedia.org/wikipedia/commons/7/7b/Meta_Platforms_Inc._logo.svg"
       models:
         fetch: false
         default:
@@ -169,6 +175,7 @@ endpoints:
     - name: "xAI (OpenRouter)"
       apiKey: ${OPENROUTER_KEY}
       baseURL: https://openrouter.ai/api/v1
+      iconURL: "https://x.ai/favicon.ico"
       models:
         fetch: false
         default:
@@ -190,6 +197,7 @@ endpoints:
     - name: "Other Models (OpenRouter)"
       apiKey: ${OPENROUTER_KEY}
       baseURL: https://openrouter.ai/api/v1
+      iconURL: "https://openrouter.ai/favicon.ico"
       models:
         fetch: false
         default:
