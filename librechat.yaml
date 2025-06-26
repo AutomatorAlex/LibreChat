@@ -30,11 +30,9 @@ endpoints:
           - meta-llama/llama-3.3-70b-instruct
           - meta-llama/llama-3.1-70b-instruct
           - meta-llama/llama-3.1-8b-instruct
-          - deepseek/deepseek-r1-distill-llama-70b
-          - qwen/qwen3-32b-instruct
 
       titleConvo: true
-      titleModel: meta-llama/llama-3.1-8b-instruct
+      titleModel: openai/gpt-4.1-mini:nitro
       dropParams:
         - stop
       modelDisplayLabel: "OpenRouter (Cerebras)"
@@ -43,6 +41,22 @@ endpoints:
         order:
           - cerebras
         allow_fallbacks: false
+
+    # Anthropic models via OpenRouter
+    - name: "Anthropic (OpenRouter)"
+      apiKey: ${OPENROUTER_KEY}
+      baseURL: https://openrouter.ai/api/v1
+      models:
+        fetch: false
+        default:
+          - anthropic/claude-sonnet-4:nitro
+          - anthropic/claude-opus-4:nitro
+          - anthropic/claude-3.7-sonnet:nitro
+      titleConvo: true
+      titleModel: openai/gpt-4.1-mini:nitro
+      dropParams:
+        - stop
+      modelDisplayLabel: "Anthropic"
       plugins:
         - id: web
           max_results: 15
@@ -50,30 +64,14 @@ endpoints:
         code: true
         tools: true
 
-    # Regular OpenRouter with throughput-optimized routing (:nitro shortcut)
-    - name: OpenRouter
+    # OpenAI models via OpenRouter
+    - name: "OpenAI (OpenRouter)"
       apiKey: ${OPENROUTER_KEY}
       baseURL: https://openrouter.ai/api/v1
       models:
         fetch: false
         default:
-          # Default model (appears first) - :nitro for highest throughput
-          - anthropic/claude-sonnet-4:nitro
-          # Other Claude models (all with nitro for max throughput)
-          - anthropic/claude-opus-4:nitro
-          - anthropic/claude-3.7-sonnet:nitro
-          # Google models (all with nitro for max throughput)
-          - google/gemini-2.5-flash:nitro
-          - google/gemini-2.5-pro:nitro
-          # Mistral models
-          - mistralai/mistral-large-2411:nitro
-          - mistralai/mistral-large-2407:nitro
-          - mistralai/mistral-medium-3:nitro
-          - mistralai/mistral-small-3.1-24b-instruct:nitro
-          - mistralai/mistral-small-24b-instruct-2501:nitro
-          - mistralai/mistral-nemo:nitro
-          - mistralai/mistral-7b-instruct:nitro
-          # OpenAI models (accessed through OpenRouter)
+          - openai/o3-pro:nitro
           - openai/gpt-4.1:nitro
           - openai/gpt-4.1-mini:nitro
           - openai/gpt-4.1-nano:nitro
@@ -83,25 +81,125 @@ endpoints:
           - openai/o4-mini:nitro
           - openai/o4-mini-high:nitro
           - openai/gpt-4o:nitro
-          # Llama Models (using throughput-optimized routing)
+      titleConvo: true
+      titleModel: openai/gpt-4.1-nano:nitro
+      dropParams:
+        - stop
+      modelDisplayLabel: "OpenAI"
+      plugins:
+        - id: web
+          max_results: 15
+      agents:
+        code: true
+        tools: true
+
+    # Google models via OpenRouter
+    - name: "Google (OpenRouter)"
+      apiKey: ${OPENROUTER_KEY}
+      baseURL: https://openrouter.ai/api/v1
+      models:
+        fetch: false
+        default:
+          - google/gemini-2.5-flash:nitro
+          - google/gemini-2.5-pro:nitro
+      titleConvo: true
+      titleModel: openai/gpt-4.1-mini:nitro
+      dropParams:
+        - stop
+      modelDisplayLabel: "Google"
+      plugins:
+        - id: web
+          max_results: 15
+      agents:
+        code: true
+        tools: true
+
+    # Mistral models via OpenRouter
+    - name: "Mistral (OpenRouter)"
+      apiKey: ${OPENROUTER_KEY}
+      baseURL: https://openrouter.ai/api/v1
+      models:
+        fetch: false
+        default:
+          - mistralai/mistral-large-2411:nitro
+          - mistralai/mistral-large-2407:nitro
+          - mistralai/mistral-medium-3:nitro
+          - mistralai/mistral-small-3.1-24b-instruct:nitro
+          - mistralai/mistral-small-24b-instruct-2501:nitro
+          - mistralai/mistral-nemo:nitro
+          - mistralai/mistral-7b-instruct:nitro
+      titleConvo: true
+      titleModel: openai/gpt-4.1-mini:nitro
+      dropParams:
+        - stop
+      modelDisplayLabel: "Mistral"
+      plugins:
+        - id: web
+          max_results: 15
+      agents:
+        code: true
+        tools: true
+
+    # Meta Llama models via OpenRouter
+    - name: "Meta Llama (OpenRouter)"
+      apiKey: ${OPENROUTER_KEY}
+      baseURL: https://openrouter.ai/api/v1
+      models:
+        fetch: false
+        default:
           - meta-llama/llama-4-maverick:nitro
           - meta-llama/llama-3.3-70b-instruct:nitro
           - meta-llama/llama-3.2-90b-vision-instruct:nitro
           - meta-llama/llama-3.2-11b-vision-instruct:nitro
           - meta-llama/llama-3.1-405b-instruct:nitro
           - nvidia/llama-3.1-nemotron-ultra-253b-v1:nitro
-          # Other popular models
-          - x-ai/grok-3-beta:nitro
-          - x-ai/grok-3-mini-beta:nitro
-          - qwen/qwen3-235b-a22b:nitro
-          # MiniMax
-          - minimax/minimax-m1:nitro
-
       titleConvo: true
-      titleModel: openai/gpt-4.1-nano:nitro
+      titleModel: openai/gpt-4.1-mini:nitro
       dropParams:
         - stop
-      modelDisplayLabel: OpenRouter
+      modelDisplayLabel: "Meta Llama"
+      plugins:
+        - id: web
+          max_results: 15
+      agents:
+        code: true
+        tools: true
+
+    # xAI models via OpenRouter
+    - name: "xAI (OpenRouter)"
+      apiKey: ${OPENROUTER_KEY}
+      baseURL: https://openrouter.ai/api/v1
+      models:
+        fetch: false
+        default:
+          - x-ai/grok-3:nitro
+          - x-ai/grok-3-mini:nitro
+      titleConvo: true
+      titleModel: openai/gpt-4.1-mini:nitro
+      dropParams:
+        - stop
+      modelDisplayLabel: "xAI"
+      plugins:
+        - id: web
+          max_results: 15
+      agents:
+        code: true
+        tools: true
+
+    # Other models via OpenRouter
+    - name: "Other Models (OpenRouter)"
+      apiKey: ${OPENROUTER_KEY}
+      baseURL: https://openrouter.ai/api/v1
+      models:
+        fetch: false
+        default:
+          - minimax/minimax-m1:nitro
+          - minimax/minimax-m1:extended
+      titleConvo: true
+      titleModel: openai/gpt-4.1-mini:nitro
+      dropParams:
+        - stop
+      modelDisplayLabel: "Other Models"
       plugins:
         - id: web
           max_results: 15

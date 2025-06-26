@@ -152,8 +152,32 @@ module.exports = {
   },
   getConvosByCursor: async (
     user,
-    { cursor, limit = 25, isArchived = false, tags, search, order = 'desc' } = {},
+    cursor,
+    limit = 25,
+    sortBy = 'updatedAt',
+    sortDirection = 'desc',
+    tags,
+    search,
   ) => {
+    // Handle both old object parameter format and new individual parameters
+    let actualCursor = cursor;
+    let actualLimit = limit;
+    let actualSortDirection = sortDirection;
+    let actualTags = tags;
+    let actualSearch = search;
+    let isArchived = false;
+
+    // Check if first parameter after user is an options object (backward compatibility)
+    if (typeof cursor === 'object' && cursor !== null && !Array.isArray(cursor)) {
+      const options = cursor;
+      actualCursor = options.cursor;
+      actualLimit = options.limit || 25;
+      actualSortDirection = options.order || 'desc';
+      actualTags = options.tags;
+      actualSearch = options.search;
+      isArchived = options.isArchived || false;
+    }
+
     const filters = [{ user }];
 
     if (isArchived) {
@@ -162,30 +186,31 @@ module.exports = {
       filters.push({ $or: [{ isArchived: false }, { isArchived: { $exists: false } }] });
     }
 
-    if (Array.isArray(tags) && tags.length > 0) {
-      filters.push({ tags: { $in: tags } });
+    if (Array.isArray(actualTags) && actualTags.length > 0) {
+      filters.push({ tags: { $in: actualTags } });
     }
 
     filters.push({ $or: [{ expiredAt: null }, { expiredAt: { $exists: false } }] });
 
-    if (search) {
+    if (actualSearch) {
       try {
-        const meiliResults = await Conversation.meiliSearch(search);
-        const matchingIds = Array.isArray(meiliResults.hits)
-          ? meiliResults.hits.map((result) => result.conversationId)
-          : [];
-        if (!matchingIds.length) {
-          return { conversations: [], nextCursor: null };
-        }
-        filters.push({ conversationId: { $in: matchingIds } });
+        // Use MongoDB text search on title field
+        const searchRegex = new RegExp(actualSearch.trim(), 'i'); // Case-insensitive regex
+        filters.push({
+          $or: [
+            { title: { $regex: searchRegex } },
+            // You can add more fields to search here if needed
+            // { description: { $regex: searchRegex } },
+          ],
+        });
       } catch (error) {
-        logger.error('[getConvosByCursor] Error during meiliSearch', error);
-        return { message: 'Error during meiliSearch' };
+        logger.error('[getConvosByCursor] Error during MongoDB search', error);
+        return { message: 'Error during MongoDB search' };
       }
     }
 
-    if (cursor) {
-      filters.push({ updatedAt: { $lt: new Date(cursor) } });
+    if (actualCursor) {
+      filters.push({ updatedAt: { $lt: new Date(actualCursor) } });
     }
 
     const query = filters.length === 1 ? filters[0] : { $and: filters };
@@ -195,12 +220,12 @@ module.exports = {
         .select(
           'conversationId endpoint title createdAt updatedAt user model agent_id assistant_id spec iconURL',
         )
-        .sort({ updatedAt: order === 'asc' ? 1 : -1 })
-        .limit(limit + 1)
+        .sort({ updatedAt: actualSortDirection === 'asc' ? 1 : -1 })
+        .limit(actualLimit + 1)
         .lean();
 
       let nextCursor = null;
-      if (convos.length > limit) {
+      if (convos.length > actualLimit) {
         const lastConvo = convos.pop();
         nextCursor = lastConvo.updatedAt.toISOString();
       }
