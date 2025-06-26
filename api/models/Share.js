@@ -127,7 +127,9 @@ async function getSharedLinks(user, pageParam, pageSize, isPublic, sortBy, sortD
             { title: { $regex: searchRegex } },
             // You can add more fields to search here if needed
           ],
-        }).select('conversationId').lean();
+        })
+          .select('conversationId')
+          .lean();
 
         if (!searchResults?.length) {
           return {

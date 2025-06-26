@@ -1,4 +1,6 @@
 version: 1.2.1
+# File storage strategy - use firebase for Firebase Storage
+fileStrategy: firebase
 interface:
   endpointsMenu: true
   modelSelect: true
