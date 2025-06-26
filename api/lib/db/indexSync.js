@@ -30,6 +30,12 @@ async function indexSync() {
     return;
   }
 
+  // Check if MeiliSearch is configured
+  if (!process.env.MEILI_HOST || !process.env.MEILI_MASTER_KEY) {
+    logger.info('[indexSync] MeiliSearch not configured, search will use MongoDB instead.');
+    return;
+  }
+
   try {
     const client = MeiliSearchClient.getInstance();
 
@@ -73,8 +79,8 @@ async function indexSync() {
           logger.error('[indexSync] Trouble creating indices, try restarting the server.', err);
         }
       }, 750);
-    } else if (err.message.includes('Meilisearch not configured')) {
-      logger.info('[indexSync] Meilisearch not configured, search will be disabled.');
+    } else if (err.message.includes('Meilisearch configuration is missing')) {
+      logger.info('[indexSync] MeiliSearch not configured, search will use MongoDB instead.');
     } else {
       logger.error('[indexSync] error', err);
     }

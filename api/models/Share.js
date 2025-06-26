@@ -119,9 +119,17 @@ async function getSharedLinks(user, pageParam, pageSize, isPublic, sortBy, sortD
 
     if (search && search.trim()) {
       try {
-        const searchResults = await Conversation.meiliSearch(search);
+        // Use MongoDB text search on conversation titles
+        const searchRegex = new RegExp(search.trim(), 'i'); // Case-insensitive regex
+        const searchResults = await Conversation.find({
+          user,
+          $or: [
+            { title: { $regex: searchRegex } },
+            // You can add more fields to search here if needed
+          ],
+        }).select('conversationId').lean();
 
-        if (!searchResults?.hits?.length) {
+        if (!searchResults?.length) {
           return {
             links: [],
             nextCursor: undefined,
@@ -129,10 +137,10 @@ async function getSharedLinks(user, pageParam, pageSize, isPublic, sortBy, sortD
           };
         }
 
-        const conversationIds = searchResults.hits.map((hit) => hit.conversationId);
+        const conversationIds = searchResults.map((result) => result.conversationId);
         query['conversationId'] = { $in: conversationIds };
       } catch (searchError) {
-        logger.error('[getSharedLinks] Meilisearch error', {
+        logger.error('[getSharedLinks] MongoDB search error', {
           error: searchError.message,
           user,
         });

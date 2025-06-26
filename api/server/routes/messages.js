@@ -54,35 +54,51 @@ router.get('/', async (req, res) => {
       const nextCursor = messages.length > pageSize ? messages.pop()[sortField] : null;
       response = { messages, nextCursor };
     } else if (search) {
-      const searchResults = await Message.meiliSearch(search, undefined, true);
+      try {
+        // Use MongoDB text search on message content
+        const searchRegex = new RegExp(search.trim(), 'i'); // Case-insensitive regex
+        const searchFilter = {
+          user: user,
+          $or: [
+            { text: { $regex: searchRegex } },
+            // You can add more fields to search here if needed
+            // { 'content.text': { $regex: searchRegex } },
+          ],
+        };
 
-      const messages = searchResults.hits || [];
+        const messages = await Message.find(searchFilter)
+          .sort({ createdAt: -1 })
+          .limit(50) // Limit search results
+          .lean();
 
-      const result = await getConvosQueried(req.user.id, messages, cursor);
+        const result = await getConvosQueried(req.user.id, messages, cursor);
 
-      const activeMessages = [];
-      for (let i = 0; i < messages.length; i++) {
-        let message = messages[i];
-        if (message.conversationId.includes('--')) {
-          message.conversationId = cleanUpPrimaryKeyValue(message.conversationId);
+        const activeMessages = [];
+        for (let i = 0; i < messages.length; i++) {
+          let message = messages[i];
+          if (message.conversationId.includes('--')) {
+            message.conversationId = cleanUpPrimaryKeyValue(message.conversationId);
+          }
+          if (result.convoMap[message.conversationId]) {
+            const convo = result.convoMap[message.conversationId];
+
+            activeMessages.push({
+              ...message,
+              title: convo.title,
+              conversationId: message.conversationId,
+              model: convo.model,
+              isCreatedByUser: message.isCreatedByUser,
+              endpoint: message.endpoint,
+              iconURL: message.iconURL,
+            });
+          }
         }
-        if (result.convoMap[message.conversationId]) {
-          const convo = result.convoMap[message.conversationId];
 
-          const dbMessage = await getMessage({ user, messageId: message.messageId });
-          activeMessages.push({
-            ...message,
-            title: convo.title,
-            conversationId: message.conversationId,
-            model: convo.model,
-            isCreatedByUser: dbMessage?.isCreatedByUser,
-            endpoint: dbMessage?.endpoint,
-            iconURL: dbMessage?.iconURL,
-          });
-        }
+        response = { messages: activeMessages, nextCursor: null };
+      } catch (error) {
+        logger.error('Error during MongoDB message search:', error);
+        response = { messages: [], nextCursor: null };
       }
-
-      response = { messages: activeMessages, nextCursor: null };
     } else {
       response = { messages: [], nextCursor: null };
     }
