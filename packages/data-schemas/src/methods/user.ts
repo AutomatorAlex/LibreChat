@@ -1,4 +1,5 @@
 import mongoose, { FilterQuery } from 'mongoose';
+import bcrypt from 'bcryptjs';
 import type { IUser, BalanceConfig, UserCreateData, UserUpdateResult } from '~/types';
 import { signPayload } from '~/crypto';
 
@@ -199,6 +200,46 @@ export function createUserMethods(mongoose: typeof import('mongoose')) {
     }).lean()) as IUser | null;
   }
 
+  /**
+   * Compares the provided password with the user's password.
+   */
+  async function comparePassword(user: IUser, candidatePassword: string): Promise<boolean> {
+    if (!user) {
+      throw new Error('No user provided');
+    }
+
+    if (!user.password) {
+      throw new Error('No password, likely an email first registered via Social/OIDC login');
+    }
+
+    return new Promise((resolve, reject) => {
+      bcrypt.compare(candidatePassword, user.password!, (err: Error | null, isMatch: boolean) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(isMatch);
+      });
+    });
+  }
+
+  /**
+   * Hashes a password using bcrypt.
+   */
+  async function hashPassword(password: string): Promise<string> {
+    if (!password) {
+      throw new Error('No password provided');
+    }
+
+    return new Promise((resolve, reject) => {
+      bcrypt.hash(password, 12, (err: Error | null, hash: string) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(hash);
+      });
+    });
+  }
+
   // Return all methods
   return {
     findUser,
@@ -209,6 +250,8 @@ export function createUserMethods(mongoose: typeof import('mongoose')) {
     deleteUserById,
     generateToken,
     toggleUserMemories,
+    comparePassword,
+    hashPassword,
   };
 }
 

@@ -1,6 +1,21 @@
-import type { Types } from 'mongoose';
+import type { Types, Model } from 'mongoose';
 
 export type ObjectId = Types.ObjectId;
+
+// Interface for Mongoose models with MeiliSearch functionality
+export interface MeiliSearchHit {
+  conversationId?: string;
+  [key: string]: unknown;
+}
+
+export interface MeiliSearchResult {
+  hits: MeiliSearchHit[];
+  [key: string]: unknown;
+}
+
+export interface SchemaWithMeiliMethods<T = Record<string, unknown>> extends Model<T> {
+  meiliSearch(query: string): Promise<MeiliSearchResult>;
+}
 export * from './user';
 export * from './token';
 export * from './convo';

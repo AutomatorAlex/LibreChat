@@ -8,15 +8,13 @@
     "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,
     "strict": true,
-    "forceConsistentCasingInFileNames": false,
+    "forceConsistentCasingInFileNames": true,
     "module": "ESNext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noImplicitAny": false,
-    "noEmit": false,
-    "declaration": true,
-    "declarationDir": "./types",
+    "noEmit": true,
     "jsx": "preserve",
     "baseUrl": "..",
     "paths": {
@@ -27,12 +25,16 @@
     }
   },
   "types": ["node", "jest", "@testing-library/jest-dom"],
-  "exclude": ["node_modules", "vite.config.ts"],
+  "exclude": [
+    "node_modules",
+    "vite.config.ts",
+    "../api/**/*",
+    "../packages/**/*",
+    "../e2e/**/*"
+  ],
   "include": [
     "src/**/*",
     "test/**/*",
-    "../e2e/**/*",
-    "test/setupTests.js",
     "env.d.ts",
     "../config/translations/**/*.ts"
   ]

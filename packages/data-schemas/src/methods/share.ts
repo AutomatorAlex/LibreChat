@@ -2,6 +2,7 @@ import { nanoid } from 'nanoid';
 import { Constants } from 'librechat-data-provider';
 import type { FilterQuery, Model } from 'mongoose';
 import type * as t from '~/types';
+import type { SchemaWithMeiliMethods, MeiliSearchHit } from '~/types';
 import logger from '~/config/winston';
 
 class ShareServiceError extends Error {
@@ -159,7 +160,7 @@ export function createShareMethods(mongoose: typeof import('mongoose')) {
             };
           }
 
-          const conversationIds = searchResults.hits.map((hit) => hit.conversationId);
+          const conversationIds = searchResults.hits.map((hit: MeiliSearchHit) => hit.conversationId);
           query['conversationId'] = { $in: conversationIds };
         } catch (searchError) {
           logger.error('[getSharedLinks] Meilisearch error', {

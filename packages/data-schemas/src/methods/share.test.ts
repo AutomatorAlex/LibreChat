@@ -4,6 +4,7 @@ import { Constants } from 'librechat-data-provider';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { createShareMethods, type ShareMethods } from './share';
 import type * as t from '~/types';
+import type { SchemaWithMeiliMethods } from '~/types';
 
 describe('Share Methods', () => {
   let mongoServer: MongoMemoryServer;

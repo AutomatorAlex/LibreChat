@@ -16,7 +16,24 @@
     "baseUrl": ".",
     "paths": {
       "~/*": ["./src/*"]
-    }
+    },
+    "types": [
+      "babel__core",
+      "babel__generator",
+      "babel__template",
+      "babel__traverse",
+      "bun",
+      "estree",
+      "estree-jsx",
+      "graceful-fs",
+      "hast",
+      "http-errors",
+      "istanbul-lib-coverage",
+      "jest",
+      "js-cookie",
+      "json-schema",
+      "node"
+    ]
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "tests"]

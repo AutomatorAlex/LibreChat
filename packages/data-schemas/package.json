@@ -44,6 +44,7 @@
     "@rollup/plugin-replace": "^5.0.5",
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^12.1.2",
+    "@types/bcryptjs": "^2.4.6",
     "@types/diff": "^6.0.0",
     "@types/express": "^5.0.0",
     "@types/jest": "^29.5.2",
@@ -61,7 +62,8 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
-    "mongoose": "^8.12.1"
+    "mongoose": "^8.12.1",
+    "bcryptjs": "^2.4.3"
   },
   "peerDependencies": {
     "jsonwebtoken": "^9.0.2",
