@@ -30,8 +30,9 @@ function ToolSelectDialog({
   const localize = useLocalize();
   const { getValues, setValue } = useFormContext<AgentForm>();
   const { data: tools } = useAvailableToolsQuery(endpoint);
-  const { groupedTools: allGroupedTools, toolsFormKey } = useAgentPanelContext();
+  const { groupedTools: allGroupedTools } = useAgentPanelContext();
   const isAgentTools = isAgentsEndpoint(endpoint);
+  const toolsFormKey = 'tools';
 
   const {
     maxPage,
@@ -164,11 +165,27 @@ function ToolSelectDialog({
 
   const groupedTools = filteredTools?.reduce(
     (acc, tool) => {
-      const serverName = tool.server_name || 'General';
+      // Extract server name from tool_id for MCP tools, or use 'General' for others
+      const serverName = tool.tool_id.includes('::')
+        ? tool.tool_id.split('::')[1] || 'General'
+        : 'General';
       if (!acc[serverName]) {
         acc[serverName] = [];
       }
-      acc[serverName].push(tool);
+      // Convert AgentToolType to TPlugin format
+      const pluginTool: TPlugin = {
+        name: tool.metadata.name,
+        pluginKey: tool.tool_id,
+        description: tool.metadata.description,
+        icon: tool.metadata.icon,
+        authConfig: tool.metadata.authConfig,
+        authenticated: tool.metadata.authenticated,
+        chatMenu: tool.metadata.chatMenu,
+        isButton: tool.metadata.isButton,
+        toolkit: tool.metadata.toolkit,
+        server_name: serverName,
+      };
+      acc[serverName].push(pluginTool);
       return acc;
     },
     {} as Record<string, TPlugin[]>,
@@ -273,7 +290,9 @@ function ToolSelectDialog({
                         key={serverName}
                         serverName={serverName}
                         tools={tools}
-                        isInstalled={(pluginKey) => getValues(toolsFormKey).includes(pluginKey)}
+                        isInstalled={(pluginKey) =>
+                          getValues(toolsFormKey)?.includes(pluginKey) ?? false
+                        }
                         onAddTool={onAddTool}
                         onRemoveTool={onRemoveTool}
                       />
