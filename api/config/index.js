@@ -66,7 +66,7 @@ function getMCPManager(userId) {
  * @returns {FlowStateManager}
  */
 function getFlowStateManager(flowsCache) {
-  if (!flow.Manager) {
+  if (!flowManager) {
     flowManager = new FlowStateManager(flowsCache, {
       ttl: Time.ONE_MINUTE * 3,
     });

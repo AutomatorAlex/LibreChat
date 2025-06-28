@@ -9,12 +9,12 @@ const convoSchema: Schema<IConversation> = new Schema(
       unique: true,
       required: true,
       index: true,
-      meiliIndex: true,
+      
     },
     title: {
       type: String,
       default: 'New Chat',
-      meiliIndex: true,
+      
     },
     user: {
       type: String,
@@ -31,7 +31,7 @@ const convoSchema: Schema<IConversation> = new Schema(
     tags: {
       type: [String],
       default: [],
-      meiliIndex: true,
+      
     },
     files: {
       type: [String],

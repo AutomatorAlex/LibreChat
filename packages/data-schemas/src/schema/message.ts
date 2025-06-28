@@ -8,13 +8,13 @@ const messageSchema: Schema<IMessage> = new Schema(
       unique: true,
       required: true,
       index: true,
-      meiliIndex: true,
+      
     },
     conversationId: {
       type: String,
       index: true,
       required: true,
-      meiliIndex: true,
+      
     },
     user: {
       type: String,
@@ -49,11 +49,11 @@ const messageSchema: Schema<IMessage> = new Schema(
     },
     sender: {
       type: String,
-      meiliIndex: true,
+      
     },
     text: {
       type: String,
-      meiliIndex: true,
+      
     },
     summary: {
       type: String,
@@ -122,7 +122,7 @@ const messageSchema: Schema<IMessage> = new Schema(
     content: {
       type: [{ type: mongoose.Schema.Types.Mixed }],
       default: undefined,
-      meiliIndex: true,
+      
     },
     thread_id: {
       type: String,

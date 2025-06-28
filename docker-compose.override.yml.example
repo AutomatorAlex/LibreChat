@@ -6,7 +6,7 @@
 # SAVE THIS FILE AS 'docker-compose.override.yaml'
 # AND USE THE 'docker compose build' & 'docker compose up -d' COMMANDS AS YOU WOULD NORMALLY DO
 
-# WARNING: YOU CAN ONLY SPECIFY EVERY SERVICE NAME ONCE (api, mongodb, meilisearch, ...)
+# WARNING: YOU CAN ONLY SPECIFY EVERY SERVICE NAME ONCE (api, mongodb, ...)
 # IF YOU WANT TO OVERRIDE MULTIPLE SETTINGS IN ONE SERVICE YOU WILL HAVE TO EDIT ACCORDINGLY
 
 # EXAMPLE: if you want to use the config file and the latest numbered release docker image the result will be:

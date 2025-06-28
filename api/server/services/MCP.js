@@ -144,7 +144,11 @@ async function createMCPTool({ req, res, toolKey, provider: _provider }) {
       const flowsCache = getLogStores(CacheKeys.FLOWS);
       const flowManager = getFlowStateManager(flowsCache);
       derivedSignal = config?.signal ? AbortSignal.any([config.signal]) : undefined;
-      logger.debug(`[MCP][${serverName}][${toolName}] toolArguments before callTool: ${JSON.stringify(toolArguments)}, type of thoughtNumber: ${typeof toolArguments?.thoughtNumber}`);
+      logger.debug(
+        `[MCP][${serverName}][${toolName}] toolArguments before callTool: ${JSON.stringify(
+          toolArguments,
+        )}, type of thoughtNumber: ${typeof toolArguments?.thoughtNumber}`,
+      );
       const mcpManager = getMCPManager(userId);
       const provider = (config?.metadata?.provider || _provider)?.toLowerCase();
 
