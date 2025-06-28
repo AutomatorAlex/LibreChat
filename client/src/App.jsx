@@ -47,13 +47,22 @@ const App = () => {
           if (isExternalDomain || target.getAttribute('target') === '_blank') {
             event.preventDefault();
             
-            // For iOS PWA, this will force the link to open in Safari
-            // The key is using window.open with '_blank' and then closing the reference
-            const newWindow = window.open(href, '_blank', 'noopener,noreferrer');
+            // Check if we're in a PWA standalone mode (iOS or other platforms)
+            const isStandalonePWA = window.matchMedia('(display-mode: standalone)').matches;
             
-            // On iOS PWA, this pattern helps ensure it opens in Safari
-            if (newWindow) {
-              newWindow.opener = null;
+            // For iOS PWA in standalone mode, use window.location.href to force Safari
+            // This is more reliable than window.open() which may open in limited in-app browser
+            if (isStandalonePWA && /iPad|iPhone|iPod/.test(navigator.userAgent)) {
+              // On iOS PWA, directly navigate to force opening in Safari
+              window.location.href = href;
+            } else {
+              // For other platforms/modes, use window.open with security features
+              const newWindow = window.open(href, '_blank', 'noopener,noreferrer');
+              
+              // Ensure no reference to opener for security
+              if (newWindow) {
+                newWindow.opener = null;
+              }
             }
           }
         } catch (e) {
