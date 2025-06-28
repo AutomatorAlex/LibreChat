@@ -1,18 +1,20 @@
 import { useEffect } from 'react';
 import { Search, X } from 'lucide-react';
-import { Dialog, DialogPanel, DialogTitle, Description } from '@headlessui/react';
 import { useFormContext } from 'react-hook-form';
-import { isAgentsEndpoint } from 'librechat-data-provider';
+import { Constants, isAgentsEndpoint } from 'librechat-data-provider';
+import { Dialog, DialogPanel, DialogTitle, Description } from '@headlessui/react';
 import { useUpdateUserPluginsMutation } from 'librechat-data-provider/react-query';
 import type {
   AssistantsEndpoint,
   EModelEndpoint,
   TPluginAction,
+  AgentToolType,
   TError,
   TPlugin,
 } from 'librechat-data-provider';
-import type { TPluginStoreDialogProps } from '~/common/types';
+import type { AgentForm, TPluginStoreDialogProps } from '~/common';
 import { PluginPagination, PluginAuthForm } from '~/components/Plugins/Store';
+import { useAgentPanelContext } from '~/Providers/AgentPanelContext';
 import { useLocalize, usePluginDialogHelpers } from '~/hooks';
 import { useAvailableToolsQuery } from '~/data-provider';
 import ToolItem from './ToolItem';
@@ -22,14 +24,13 @@ function ToolSelectDialog({
   isOpen,
   endpoint,
   setIsOpen,
-  toolsFormKey,
 }: TPluginStoreDialogProps & {
-  toolsFormKey: string;
   endpoint: AssistantsEndpoint | EModelEndpoint.agents;
 }) {
   const localize = useLocalize();
-  const { getValues, setValue } = useFormContext();
+  const { getValues, setValue } = useFormContext<AgentForm>();
   const { data: tools } = useAvailableToolsQuery(endpoint);
+  const { groupedTools: allGroupedTools, toolsFormKey } = useAgentPanelContext();
   const isAgentTools = isAgentsEndpoint(endpoint);
 
   const {
@@ -70,9 +71,20 @@ function ToolSelectDialog({
 
   const handleInstall = (pluginAction: TPluginAction) => {
     const addFunction = () => {
-      const fns = getValues(toolsFormKey).slice();
-      fns.push(pluginAction.pluginKey);
-      setValue(toolsFormKey, fns);
+      const installedToolIds: string[] = getValues(toolsFormKey) || [];
+      // Add the parent
+      installedToolIds.push(pluginAction.pluginKey);
+
+      // If this tool is a group, add subtools too
+      const groupObj = allGroupedTools?.[pluginAction.pluginKey];
+      if (groupObj?.tools && groupObj.tools.length > 0) {
+        for (const sub of groupObj.tools) {
+          if (!installedToolIds.includes(sub.tool_id)) {
+            installedToolIds.push(sub.tool_id);
+          }
+        }
+      }
+      setValue(toolsFormKey, Array.from(new Set(installedToolIds))); // no duplicates just in case
     };
 
     if (!pluginAction.auth) {
@@ -89,17 +101,21 @@ function ToolSelectDialog({
     setShowPluginAuthForm(false);
   };
 
-  const onRemoveTool = (tool: string) => {
-    setShowPluginAuthForm(false);
+  const onRemoveTool = (toolId: string) => {
+    const groupObj = allGroupedTools?.[toolId];
+    const toolIdsToRemove = [toolId];
+    if (groupObj?.tools && groupObj.tools.length > 0) {
+      toolIdsToRemove.push(...groupObj.tools.map((sub) => sub.tool_id));
+    }
+    // Remove these from the formTools
     updateUserPlugins.mutate(
-      { pluginKey: tool, action: 'uninstall', auth: null, isEntityTool: true },
+      { pluginKey: toolId, action: 'uninstall', auth: {}, isEntityTool: true },
       {
-        onError: (error: unknown) => {
-          handleInstallError(error as TError);
-        },
+        onError: (error: unknown) => handleInstallError(error as TError),
         onSuccess: () => {
-          const fns = getValues(toolsFormKey).filter((fn: string) => fn !== tool);
-          setValue(toolsFormKey, fns);
+          const remainingToolIds =
+            getValues(toolsFormKey)?.filter((toolId) => !toolIdsToRemove.includes(toolId)) || [];
+          setValue(toolsFormKey, remainingToolIds);
         },
       },
     );
@@ -110,17 +126,40 @@ function ToolSelectDialog({
     const getAvailablePluginFromKey = tools?.find((p) => p.pluginKey === pluginKey);
     setSelectedPlugin(getAvailablePluginFromKey);
 
-    const { authConfig, authenticated = false } = getAvailablePluginFromKey ?? {};
+    const isMCPTool = pluginKey.includes(Constants.mcp_delimiter);
 
-    if (authConfig && authConfig.length > 0 && !authenticated) {
-      setShowPluginAuthForm(true);
+    if (isMCPTool) {
+      // MCP tools have their variables configured elsewhere (e.g., MCPPanel or MCPSelect),
+      // so we directly proceed to install without showing the auth form.
+      handleInstall({ pluginKey, action: 'install', auth: {} });
     } else {
-      handleInstall({ pluginKey, action: 'install', auth: null });
+      const { authConfig, authenticated = false } = getAvailablePluginFromKey ?? {};
+      if (authConfig && authConfig.length > 0 && !authenticated) {
+        setShowPluginAuthForm(true);
+      } else {
+        handleInstall({
+          pluginKey,
+          action: 'install',
+          auth: {},
+        });
+      }
     }
   };
 
-  const filteredTools = tools?.filter((tool) =>
-    tool.name.toLowerCase().includes(searchValue.toLowerCase()),
+  const filteredTools = Object.values(allGroupedTools || {}).filter(
+    (tool: AgentToolType & { tools?: AgentToolType[] }) => {
+      // Check if the parent tool matches
+      if (tool.metadata?.name?.toLowerCase().includes(searchValue.toLowerCase())) {
+        return true;
+      }
+      // Check if any child tools match
+      if (tool.tools) {
+        return tool.tools.some((childTool) =>
+          childTool.metadata?.name?.toLowerCase().includes(searchValue.toLowerCase()),
+        );
+      }
+      return false;
+    },
   );
 
   const groupedTools = filteredTools?.reduce(
@@ -160,8 +199,8 @@ function ToolSelectDialog({
       {/* Full-screen container to center the panel */}
       <div className="fixed inset-0 flex items-center justify-center p-4">
         <DialogPanel
-          className="relative w-full transform overflow-hidden rounded-lg bg-surface-secondary text-left shadow-xl transition-all max-sm:h-full sm:mx-7 sm:my-8 sm:max-w-2xl lg:max-w-5xl xl:max-w-7xl"
-          style={{ minHeight: '610px', maxHeight: '90vh' }}
+          className="relative max-h-[90vh] w-full transform overflow-hidden overflow-y-auto rounded-lg bg-surface-secondary text-left shadow-xl transition-all max-sm:h-full sm:mx-7 sm:my-8 sm:max-w-2xl lg:max-w-5xl xl:max-w-7xl"
+          style={{ minHeight: '610px' }}
         >
           <div className="flex items-center justify-between border-b-[1px] border-border-medium px-4 pb-4 pt-5 sm:p-6">
             <div className="flex items-center">
