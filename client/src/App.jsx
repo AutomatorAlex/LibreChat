@@ -37,28 +37,52 @@ const App = () => {
       // Check if it's an external link (different domain or protocol)
       const isExternal = href.startsWith('http://') || href.startsWith('https://');
       const currentDomain = window.location.hostname;
-      
+
       if (isExternal) {
         try {
           const linkUrl = new URL(href);
           const isExternalDomain = linkUrl.hostname !== currentDomain;
-          
+
           // If it's an external domain or if target="_blank" is already set
           if (isExternalDomain || target.getAttribute('target') === '_blank') {
             event.preventDefault();
-            
+
             // Check if we're in a PWA standalone mode (iOS or other platforms)
             const isStandalonePWA = window.matchMedia('(display-mode: standalone)').matches;
-            
-            // For iOS PWA in standalone mode, use window.location.href to force Safari
-            // This is more reliable than window.open() which may open in limited in-app browser
-            if (isStandalonePWA && /iPad|iPhone|iPod/.test(navigator.userAgent)) {
-              // On iOS PWA, directly navigate to force opening in Safari
-              window.location.href = href;
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+            console.log('🔍 External Link Debug Info:', {
+              href,
+              isIOS,
+              isStandalonePWA,
+              userAgent: navigator.userAgent,
+              displayMode: isStandalonePWA ? 'standalone' : 'browser',
+              linkDomain: new URL(href).hostname,
+              currentDomain: currentDomain,
+            });
+
+            // For iOS PWA in standalone mode, use dynamic anchor element workaround
+            // This is the proven solution for iOS Safari PWA external link handling
+            if (isStandalonePWA && isIOS) {
+              console.log('📱 iOS PWA detected - using dynamic anchor workaround (FIXED METHOD)');
+              // iOS PWA workaround: Create dynamic anchor element and click it
+              // This forces Safari to open the link externally instead of navigating the PWA
+              const dynamicLink = document.createElement('a');
+              dynamicLink.href = href;
+              dynamicLink.target = '_blank';
+              dynamicLink.rel = 'noopener noreferrer';
+
+              // Temporarily add to DOM, click, then remove
+              document.body.appendChild(dynamicLink);
+              dynamicLink.click();
+              document.body.removeChild(dynamicLink);
+
+              console.log('✅ Dynamic anchor clicked - should open in Safari');
             } else {
+              console.log('🌐 Non-iOS or browser mode - using window.open');
               // For other platforms/modes, use window.open with security features
               const newWindow = window.open(href, '_blank', 'noopener,noreferrer');
-              
+
               // Ensure no reference to opener for security
               if (newWindow) {
                 newWindow.opener = null;
