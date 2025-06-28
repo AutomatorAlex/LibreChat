@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { Tools } from './types/assistants';
 import type { TMessageContentParts, FunctionTool, FunctionToolCall } from './types/assistants';
-import { TFeedback, feedbackSchema } from './feedback';
+import { TFeedback } from './feedback';
 import type { SearchResultData } from './types/web';
 import type { TFile } from './types/files';
 
@@ -515,7 +515,20 @@ export const tMessageSchema = z.object({
   thread_id: z.string().optional(),
   /* frontend components */
   iconURL: z.string().nullable().optional(),
-  feedback: feedbackSchema.optional(),
+  feedback: z
+    .object({
+      rating: z.enum(['thumbsUp', 'thumbsDown']),
+      tag: z
+        .object({
+          key: z.string(),
+          label: z.string(),
+          direction: z.enum(['thumbsUp', 'thumbsDown']),
+          icon: z.string(),
+        })
+        .optional(),
+      text: z.string().max(1024).optional(),
+    })
+    .optional(),
 });
 
 export type MemoryArtifact = {

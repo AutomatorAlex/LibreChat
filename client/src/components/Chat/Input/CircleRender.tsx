@@ -3,19 +3,6 @@ import { CircleIcon, CircleDotsIcon } from '~/components/svg';
 import { ECallState } from 'librechat-data-provider';
 
 const CircleRender = ({ rmsLevel, isCameraOn, state }) => {
-  const getIconComponent = (state) => {
-    switch (state) {
-      case ECallState.Thinking:
-        return <CircleDotsIcon />;
-      default:
-        return (
-          <div className="smooth-transition" style={{ transform: `scale(${transformScale})` }}>
-            <CircleIcon state={state} size="256" />
-          </div>
-        );
-    }
-  };
-
   const baseScale = isCameraOn ? 0.5 : 1;
   const scaleMultiplier =
     rmsLevel > 0.08
@@ -29,6 +16,19 @@ const CircleRender = ({ rmsLevel, isCameraOn, state }) => {
             : 1;
 
   const transformScale = baseScale * scaleMultiplier;
+
+  const getIconComponent = (state) => {
+    switch (state) {
+      case ECallState.Thinking:
+        return <CircleDotsIcon />;
+      default:
+        return (
+          <div className="smooth-transition" style={{ transform: `scale(${transformScale})` }}>
+            <CircleIcon state={state} size="256" />
+          </div>
+        );
+    }
+  };
 
   return getIconComponent(state);
 };

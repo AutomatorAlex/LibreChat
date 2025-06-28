@@ -80,6 +80,7 @@ export type TFile = {
   expiresAt?: string | Date;
   preview?: string;
   metadata?: { fileIdentifier?: string };
+  vectorsAttached?: Array<{ name: string; id?: string }>;
   createdAt?: string | Date;
   updatedAt?: string | Date;
 };

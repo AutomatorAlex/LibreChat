@@ -623,3 +623,11 @@ export type TBalanceResponse = {
   lastRefill?: Date;
   refillAmount?: number;
 };
+
+export enum ECallState {
+  Idle = 'idle',
+  Listening = 'listening',
+  Thinking = 'thinking',
+  Speaking = 'speaking',
+  Error = 'error',
+}
