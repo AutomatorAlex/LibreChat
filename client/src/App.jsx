@@ -10,6 +10,7 @@ import { ToastProvider } from './Providers';
 import Toast from './components/ui/Toast';
 import { LiveAnnouncer } from '~/a11y';
 import { router } from './routes';
+import { useEffect } from 'react';
 
 const App = () => {
   const { setError } = useApiErrorBoundary();
@@ -23,6 +24,53 @@ const App = () => {
       },
     }),
   });
+
+  // Handle external links in PWA - force them to open in Safari
+  useEffect(() => {
+    const handleExternalLinks = (event) => {
+      const target = event.target.closest('a');
+      if (!target) return;
+
+      const href = target.getAttribute('href');
+      if (!href) return;
+
+      // Check if it's an external link (different domain or protocol)
+      const isExternal = href.startsWith('http://') || href.startsWith('https://');
+      const currentDomain = window.location.hostname;
+      
+      if (isExternal) {
+        try {
+          const linkUrl = new URL(href);
+          const isExternalDomain = linkUrl.hostname !== currentDomain;
+          
+          // If it's an external domain or if target="_blank" is already set
+          if (isExternalDomain || target.getAttribute('target') === '_blank') {
+            event.preventDefault();
+            
+            // For iOS PWA, this will force the link to open in Safari
+            // The key is using window.open with '_blank' and then closing the reference
+            const newWindow = window.open(href, '_blank', 'noopener,noreferrer');
+            
+            // On iOS PWA, this pattern helps ensure it opens in Safari
+            if (newWindow) {
+              newWindow.opener = null;
+            }
+          }
+        } catch (e) {
+          // If URL parsing fails, let the default behavior happen
+          console.warn('Failed to parse URL:', href, e);
+        }
+      }
+    };
+
+    // Add event listener to document to catch all link clicks
+    document.addEventListener('click', handleExternalLinks, true);
+
+    // Cleanup
+    return () => {
+      document.removeEventListener('click', handleExternalLinks, true);
+    };
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>

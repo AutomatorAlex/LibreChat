@@ -118,3 +118,4 @@ helm/**/charts/
 helm/**/.values.yaml
 
 !/client/src/@types/i18next.d.ts
+.roo/memory.jsonl
