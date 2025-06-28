@@ -30,8 +30,10 @@ const userSchema = new Schema<IUser>(
     },
     username: {
       type: String,
+      unique: true,
       lowercase: true,
       default: '',
+      index: true,
     },
     email: {
       type: String,
@@ -51,6 +53,13 @@ const userSchema = new Schema<IUser>(
       trim: true,
       minlength: 8,
       maxlength: 128,
+      validate: {
+        validator: function (v: string) {
+          return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(v);
+        },
+        message:
+          'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
+      },
     },
     avatar: {
       type: String,
