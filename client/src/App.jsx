@@ -41,12 +41,21 @@ const App = () => {
 
       // Check if it's an external link (different domain or protocol)
       const isExternal = href.startsWith('http://') || href.startsWith('https://');
-      const currentDomain = window.location.hostname;
+      const currentOrigin = window.location.origin;
 
       if (isExternal) {
         try {
           const linkUrl = new URL(href);
-          const isExternalDomain = linkUrl.hostname !== currentDomain;
+          const linkOrigin = linkUrl.origin;
+          const isExternalDomain = linkOrigin !== currentOrigin;
+
+          console.log('🔍 DEBUGGING - Link Analysis:', {
+            href,
+            currentOrigin,
+            linkOrigin,
+            isExternalDomain,
+            shouldIntercept: isExternalDomain,
+          });
 
           // Only handle truly external domains, not same-domain links
           if (isExternalDomain) {
@@ -63,7 +72,8 @@ const App = () => {
               userAgent: navigator.userAgent,
               displayMode: isStandalonePWA ? 'standalone' : 'browser',
               linkDomain: linkUrl.hostname,
-              currentDomain: currentDomain,
+              linkOrigin: linkOrigin,
+              currentOrigin: currentOrigin,
             });
 
             // For iOS PWA in standalone mode, use dynamic anchor element to force Safari
