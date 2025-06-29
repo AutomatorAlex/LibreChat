@@ -39,13 +39,13 @@ const App = () => {
         return;
       }
 
-      // Check if it's an external link (different domain or protocol)
-      const isExternal = href.startsWith('http://') || href.startsWith('https://');
-      const currentOrigin = window.location.origin;
-
-      if (isExternal) {
+      // Check if it's an absolute URL (has protocol)
+      const isAbsoluteUrl = href.startsWith('http://') || href.startsWith('https://');
+      
+      if (isAbsoluteUrl) {
         try {
           const linkUrl = new URL(href);
+          const currentOrigin = window.location.origin;
           const linkOrigin = linkUrl.origin;
           const isExternalDomain = linkOrigin !== currentOrigin;
 
@@ -57,7 +57,7 @@ const App = () => {
             shouldIntercept: isExternalDomain,
           });
 
-          // Only handle truly external domains, not same-domain links
+          // Only intercept truly external domains, not same-origin links
           if (isExternalDomain) {
             event.preventDefault();
 
