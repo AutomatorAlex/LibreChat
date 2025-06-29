@@ -2,7 +2,7 @@
   "name": "LibreChat",
   "short_name": "LibreChat",
   "description": "An open source chat application with support for multiple AI models",
-  "start_url": "/",
+  "start_url": "/c/new",
   "display": "standalone",
   "background_color": "#171717",
   "theme_color": "#171717",
