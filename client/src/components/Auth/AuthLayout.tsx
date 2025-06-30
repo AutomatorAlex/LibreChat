@@ -64,7 +64,7 @@ function AuthLayout({
           <img
             src="/assets/logo.webp"
             className="h-full w-full object-contain"
-            alt={localize('com_ui_logo', { 0: startupConfig?.appTitle ?? 'LibreChat' })}
+            alt="LibreChat Logo"
           />
         </div>
       </BlinkAnimation>
