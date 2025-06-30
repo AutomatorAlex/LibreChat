@@ -21,37 +21,7 @@
     <link rel="apple-touch-icon" sizes="72x72" href="/assets/apple-icon-72x72.png" />
     <link rel="apple-touch-icon" sizes="60x60" href="/assets/apple-icon-60x60.png" />
     <link rel="apple-touch-icon" sizes="57x57" href="/assets/apple-icon-57x57.png" />
-    <!-- DEBUG: Hardcoded manifest link causing PWA issues - should be auto-injected by VitePWA -->
-    <link rel="manifest" href="/manifest.json" />
     <meta name="viewport" content="width=device-width, initial-scale=1, interactive-widget=resizes-content" />
-    <script>
-      // DEBUG: Log manifest link detection
-      console.log('🔍 DEBUG: Checking manifest links in HTML...');
-      document.addEventListener('DOMContentLoaded', () => {
-        const manifestLinks = document.querySelectorAll('link[rel="manifest"]');
-        console.log('🔍 DEBUG: Found manifest links:', manifestLinks.length);
-        manifestLinks.forEach((link, index) => {
-          console.log(`🔍 DEBUG: Manifest link ${index + 1}:`, link.href);
-          // Try to fetch the manifest to see if it exists
-          fetch(link.href)
-            .then(response => {
-              if (response.ok) {
-                console.log(`✅ DEBUG: Manifest ${link.href} exists`);
-                return response.text();
-              } else {
-                console.error(`❌ DEBUG: Manifest ${link.href} failed with status:`, response.status);
-                throw new Error(`HTTP ${response.status}`);
-              }
-            })
-            .then(text => {
-              console.log(`📄 DEBUG: Manifest content preview:`, text.substring(0, 200) + '...');
-            })
-            .catch(error => {
-              console.error(`❌ DEBUG: Failed to fetch manifest ${link.href}:`, error);
-            });
-        });
-      });
-    </script>
     <style>
       html,
       body {
