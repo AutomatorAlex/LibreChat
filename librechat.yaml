@@ -309,3 +309,21 @@ mcpServers:
       Authorization: "Bearer ${N8N_API_KEY}"
     timeout: 180000
     initTimeout: 15000
+
+# Memory configuration for user memories
+memory:
+  # Enable memory functionality
+  disabled: false
+  # Restrict memory keys to specific values to limit memory storage and improve consistency
+  validKeys: ["preferences", "work_info", "personal_info", "business_info", "skills", "interests", "context"]
+  # Maximum token limit for memory storage
+  tokenLimit: 10000
+  # Enable personalization features
+  personalize: true
+  # Memory agent configuration - define inline with OpenRouter
+  agent:
+    provider: "openrouter"
+    model: "openai/gpt-4.1-mini"
+    instructions: "You are a memory management assistant. Store and manage user information accurately. Focus on remembering user preferences, work information, personal details, skills, interests, and conversation context to provide personalized assistance."
+    model_parameters:
+      temperature: 0.1
