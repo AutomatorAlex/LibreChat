@@ -28,6 +28,7 @@ const {
   createStructuredTransaction,
 } = require('./Transaction');
 const { spendTokens, spendStructuredTokens } = require('./spendTokens');
+const { checkBalance } = require('./balanceMethods');
 
 module.exports = {
   ...methods,
@@ -59,4 +60,5 @@ module.exports = {
   createStructuredTransaction,
   spendTokens,
   spendStructuredTokens,
+  checkBalance,
 };
