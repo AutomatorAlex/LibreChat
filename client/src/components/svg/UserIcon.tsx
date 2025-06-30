@@ -1,5 +1,9 @@
-export default function UserIcon() {
+interface UserIconProps {
+  className?: string;
+}
+
+export default function UserIcon({ className = 'w-5 h-5' }: UserIconProps) {
   return (
-    <img src="/assets/logo.webp" className="h-full w-full object-contain" alt="LibreChat Logo" />
+    <img src="/assets/logo.webp" className={`object-contain ${className}`} alt="LibreChat Logo" />
   );
 }
