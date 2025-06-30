@@ -50,9 +50,13 @@ const getCustomEndpointConfig = async (endpoint) => {
 
   const { endpoints = {} } = customConfig;
   const customEndpoints = endpoints[EModelEndpoint.custom] ?? [];
-  return customEndpoints.find(
-    (endpointConfig) => normalizeEndpointName(endpointConfig.name) === endpoint,
-  );
+  return customEndpoints.find((endpointConfig) => {
+    const { name } = endpointConfig;
+    if (name.toLowerCase().includes(endpoint.toLowerCase())) {
+      return true;
+    }
+    return normalizeEndpointName(name) === endpoint;
+  });
 };
 
 async function createGetMCPAuthMap() {
