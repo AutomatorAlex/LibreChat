@@ -21,6 +21,13 @@ const {
 } = require('./Message');
 const { getConvoTitle, getConvo, saveConvo, deleteConvos } = require('./Conversation');
 const { getPreset, getPresets, savePreset, deletePresets } = require('./Preset');
+const {
+  getTransactions,
+  createTransaction,
+  createAutoRefillTransaction,
+  createStructuredTransaction,
+} = require('./Transaction');
+const { spendTokens, spendStructuredTokens } = require('./spendTokens');
 
 module.exports = {
   ...methods,
@@ -46,4 +53,10 @@ module.exports = {
   getPresets,
   savePreset,
   deletePresets,
+  getTransactions,
+  createTransaction,
+  createAutoRefillTransaction,
+  createStructuredTransaction,
+  spendTokens,
+  spendStructuredTokens,
 };
