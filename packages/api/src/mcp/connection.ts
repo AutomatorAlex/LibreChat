@@ -184,9 +184,9 @@ export class MCPConnection extends EventEmitter {
           logger.info(`${this.getLogPrefix()} Creating SSE transport: ${url.toString()}`);
           const abortController = new AbortController();
 
-          /** Add OAuth token to headers if available */
+          /** Add OAuth token to headers if available and no Authorization header exists */
           const headers = { ...options.headers };
-          if (this.oauthTokens?.access_token) {
+          if (this.oauthTokens?.access_token && !headers['Authorization']) {
             headers['Authorization'] = `Bearer ${this.oauthTokens.access_token}`;
           }
 
@@ -235,9 +235,9 @@ export class MCPConnection extends EventEmitter {
           );
           const abortController = new AbortController();
 
-          // Add OAuth token to headers if available
+          // Add OAuth token to headers if available and no Authorization header exists
           const headers = { ...options.headers };
-          if (this.oauthTokens?.access_token) {
+          if (this.oauthTokens?.access_token && !headers['Authorization']) {
             headers['Authorization'] = `Bearer ${this.oauthTokens.access_token}`;
           }
 
