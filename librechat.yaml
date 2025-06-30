@@ -323,7 +323,7 @@ memory:
   # Memory agent configuration - define inline with OpenRouter
   agent:
     provider: "openrouter"
-    model: "openai/gpt-4.1-mini"
+    model: "openai/gpt-4.1-mini:nitro"
     instructions: "You are a memory management assistant. Store and manage user information accurately. Focus on remembering user preferences, work information, personal details, skills, interests, and conversation context to provide personalized assistance."
     model_parameters:
       temperature: 0.1

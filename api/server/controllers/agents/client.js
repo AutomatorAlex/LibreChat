@@ -482,7 +482,8 @@ class AgentClient extends BaseClient {
     const messageId = this.responseMessageId + '';
     const conversationId = this.conversationId + '';
     const [withoutKeys, processMemory] = await createMemoryProcessor({
-      ...this.options,
+      req: this.options.req,
+      res: this.options.res,
       userId,
       config,
       messageId,
