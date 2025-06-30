@@ -11,7 +11,7 @@ const cookieParser = require('cookie-parser');
 const { isEnabled } = require('@librechat/api');
 const { logger } = require('@librechat/data-schemas');
 const mongoSanitize = require('express-mongo-sanitize');
-const { connectDb, indexSync } = require('~/db');
+const { connectDb } = require('~/db');
 
 const validateImageRequest = require('./middleware/validateImageRequest');
 const { jwtLogin, ldapLogin, passportLogin } = require('~/strategies');
@@ -39,9 +39,6 @@ const startServer = async () => {
   await connectDb();
 
   logger.info('Connected to MongoDB');
-  indexSync().catch((err) => {
-    logger.error('[indexSync] Background sync failed:', err);
-  });
 
   app.disable('x-powered-by');
   app.set('trust proxy', trusted_proxy);
@@ -177,7 +174,7 @@ process.on('uncaughtException', (err) => {
 
   if (err.message.includes('fetch failed')) {
     if (messageCount === 0) {
-      logger.warn('Meilisearch error, search will be disabled');
+      logger.warn('Network fetch failed');
       messageCount++;
     }
 
