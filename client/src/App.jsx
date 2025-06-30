@@ -52,7 +52,8 @@ const App = () => {
       isIOS: /iPad|iPhone|iPod/.test(navigator.userAgent),
       isIOSChrome: /CriOS/.test(navigator.userAgent),
       isIOSFirefox: /FxiOS/.test(navigator.userAgent),
-      isIOSSafari: /Safari/.test(navigator.userAgent) && !/Chrome|CriOS|FxiOS/.test(navigator.userAgent),
+      isIOSSafari:
+        /Safari/.test(navigator.userAgent) && !/Chrome|CriOS|FxiOS/.test(navigator.userAgent),
       isStandalone: window.matchMedia('(display-mode: standalone)').matches,
       isFullscreen: window.matchMedia('(display-mode: fullscreen)').matches,
       isMinimalUI: window.matchMedia('(display-mode: minimal-ui)').matches,
@@ -72,7 +73,9 @@ const App = () => {
     const appleMetaTags = {
       webAppCapable: document.querySelector('meta[name="apple-mobile-web-app-capable"]')?.content,
       webAppTitle: document.querySelector('meta[name="apple-mobile-web-app-title"]')?.content,
-      webAppStatusBarStyle: document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]')?.content,
+      webAppStatusBarStyle: document.querySelector(
+        'meta[name="apple-mobile-web-app-status-bar-style"]',
+      )?.content,
       touchIcon: document.querySelector('link[rel="apple-touch-icon"]')?.href,
     };
 
@@ -97,7 +100,7 @@ const App = () => {
     const originalPushState = history.pushState;
     const originalReplaceState = history.replaceState;
 
-    history.pushState = function(...args) {
+    history.pushState = function (...args) {
       console.log('🧭 NAVIGATION: history.pushState called', {
         args,
         currentURL: window.location.href,
@@ -106,7 +109,7 @@ const App = () => {
       return originalPushState.apply(this, args);
     };
 
-    history.replaceState = function(...args) {
+    history.replaceState = function (...args) {
       console.log('🧭 NAVIGATION: history.replaceState called', {
         args,
         currentURL: window.location.href,
@@ -138,13 +141,13 @@ const App = () => {
         timestamp: Date.now(),
         currentURL: window.location.href,
       });
-      
+
       if (!e.matches && platformInfo.isIOS) {
         console.log('🚨 CRITICAL: PWA LOST STANDALONE MODE ON iOS!');
         console.log('🔍 This indicates the app broke out to Safari');
       }
     };
-    
+
     displayModeQuery.addEventListener('change', handleDisplayModeChange);
 
     // Monitor for page visibility changes
@@ -156,7 +159,7 @@ const App = () => {
         currentURL: window.location.href,
       });
     };
-    
+
     document.addEventListener('visibilitychange', handleVisibilityChange);
 
     // Monitor for beforeunload events
@@ -167,7 +170,7 @@ const App = () => {
         event: e,
       });
     };
-    
+
     window.addEventListener('beforeunload', handleBeforeUnload);
 
     const handleExternalLinks = (event) => {
@@ -192,7 +195,7 @@ const App = () => {
 
       // Check if it's an absolute URL (has protocol)
       const isAbsoluteUrl = href.startsWith('http://') || href.startsWith('https://');
-      
+
       if (isAbsoluteUrl) {
         try {
           const linkUrl = new URL(href);
@@ -277,7 +280,7 @@ const App = () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       window.removeEventListener('beforeunload', handleBeforeUnload);
       clearInterval(urlChangeInterval);
-      
+
       // Restore original history methods
       history.pushState = originalPushState;
       history.replaceState = originalReplaceState;
