@@ -239,7 +239,10 @@ export class BasicToolEndHandler implements EventHandler {
   }
 }
 
+import type { Request as ServerRequest } from 'express';
+
 export async function processMemory({
+  req,
   res,
   userId,
   setMemory,
@@ -254,6 +257,7 @@ export async function processMemory({
   tokenLimit,
   totalTokens = 0,
 }: {
+  req: ServerRequest;
   res: ServerResponse;
   setMemory: MemoryMethods['setMemory'];
   deleteMemory: MemoryMethods['deleteMemory'];
@@ -324,10 +328,12 @@ ${memory ?? 'No existing memories'}`;
         instructions,
         additional_instructions: memoryStatus,
         toolEnd: true,
-      },
-      customHandlers,
-      returnContent: true,
-    });
+        },
+        req,
+        res,
+        customHandlers,
+        returnContent: true,
+      });
 
     const config = {
       configurable: {
@@ -354,6 +360,7 @@ ${memory ?? 'No existing memories'}`;
 }
 
 export async function createMemoryProcessor({
+  req,
   res,
   userId,
   messageId,
@@ -361,6 +368,7 @@ export async function createMemoryProcessor({
   conversationId,
   config = {},
 }: {
+  req: ServerRequest;
   res: ServerResponse;
   messageId: string;
   conversationId: string;
@@ -380,6 +388,7 @@ export async function createMemoryProcessor({
     async function (messages: BaseMessage[]): Promise<(TAttachment | null)[] | undefined> {
       try {
         return await processMemory({
+          req,
           res,
           userId,
           messages,

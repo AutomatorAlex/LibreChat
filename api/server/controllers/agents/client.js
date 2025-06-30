@@ -482,6 +482,7 @@ class AgentClient extends BaseClient {
     const messageId = this.responseMessageId + '';
     const conversationId = this.conversationId + '';
     const [withoutKeys, processMemory] = await createMemoryProcessor({
+      ...this.options,
       userId,
       config,
       messageId,
@@ -491,7 +492,6 @@ class AgentClient extends BaseClient {
         deleteMemory,
         getFormattedMemories,
       },
-      res: this.options.res,
     });
 
     this.processMemory = processMemory;
