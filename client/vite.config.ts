@@ -52,12 +52,23 @@ export default defineConfig(({ command }) => ({
       },
       includeAssets: [],
       manifest: {
+        id: '/',
         name: 'LibreChat',
         short_name: 'LibreChat',
+        description: 'LibreChat - An open source chat application with support for multiple AI models',
         start_url: '/',
+        scope: '/',
         display: 'standalone',
-        background_color: '#000000',
-        theme_color: '#009688',
+        orientation: 'portrait-primary',
+        background_color: '#171717',
+        theme_color: '#171717',
+        lang: 'en-US',
+        categories: ['productivity', 'communication', 'utilities'],
+        prefer_related_applications: false,
+        display_override: ['window-controls-overlay', 'standalone'],
+        launch_handler: {
+          client_mode: 'focus-existing'
+        },
         icons: [
           {
             src: '/assets/favicon-32x32.png',
@@ -83,9 +94,23 @@ export default defineConfig(({ command }) => ({
             src: '/assets/maskable-icon.png',
             sizes: '512x512',
             type: 'image/png',
-            purpose: 'maskable',
+            purpose: 'any maskable',
           },
         ],
+        shortcuts: [
+          {
+            name: 'New Chat',
+            short_name: 'New Chat',
+            description: 'Start a new conversation',
+            url: '/c/new',
+            icons: [
+              {
+                src: '/assets/apple-touch-icon-180x180.png',
+                sizes: '180x180'
+              }
+            ]
+          }
+        ]
       },
     }),
     // sourcemapExclude({ excludeNodeModules: true }),

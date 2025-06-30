@@ -1,45 +1,58 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>LibreChat</title>
-  <meta name="description" content="An open source chat application with support for multiple AI models" />
-  
-  <!-- Standard PWA icons and meta tags -->
-  <link rel="icon" href="/assets/favicon-32x32.png" />
-  <link rel="apple-touch-icon" href="/assets/apple-touch-icon-180x180.png" sizes="180x180" />
-  <link rel="mask-icon" href="/assets/maskable-icon.png" color="#171717" />
-  <meta name="theme-color" content="#171717" media="(prefers-color-scheme: light)" />
-  <meta name="theme-color" content="#171717" media="(prefers-color-scheme: dark)" />
-  
-  <!-- iOS PWA Configuration - Enhanced for iOS compatibility -->
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-title" content="LibreChat" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <meta name="apple-touch-fullscreen" content="yes" />
-  <meta name="mobile-web-app-capable" content="yes" />
-  <meta name="format-detection" content="telephone=no" />
-  
-  <!-- Additional iOS-specific meta tags for better PWA experience -->
-  <meta name="apple-mobile-web-app-orientation" content="portrait" />
-  <meta name="HandheldFriendly" content="true" />
-  <meta name="MobileOptimized" content="width" />
-  
-  <!-- Additional Apple Touch Icons for better iOS support -->
-  <link rel="apple-touch-icon" href="/assets/apple-icon-120x120.png" sizes="120x120" />
-  <link rel="apple-touch-icon" href="/assets/apple-icon-152x152.png" sizes="152x152" />
-  <link rel="apple-touch-icon" href="/assets/apple-icon-180x180.png" sizes="180x180" />
-  
-  <!-- iOS Splash Screens for better launch experience -->
-  <link rel="apple-touch-startup-image" href="/assets/apple-icon-180x180.png" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)" />
-  <link rel="apple-touch-startup-image" href="/assets/apple-icon-180x180.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2)" />
-  
-  <!-- Web App Manifest -->
-  <link rel="manifest" href="/manifest.json" />
-</head>
-<body>
-  <div id="root"></div>
-  <script type="module" src="/src/main.tsx"></script>
-</body>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="theme-color" content="#171717" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="description" content="LibreChat - An open source chat application with support for multiple AI models" />
+    <title>LibreChat</title>
+    <link rel="shortcut icon" href="#" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png" />
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon-180x180.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, interactive-widget=resizes-content" />
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+      }
+    </style>
+    <script>
+      const theme = localStorage.getItem('color-theme');
+      const loadingContainerStyle = document.createElement('style');
+      let backgroundColor;
+
+      if (theme === 'dark') {
+        backgroundColor = '#0d0d0d';
+      } else if (theme === 'light') {
+        backgroundColor = '#ffffff';
+      } else if (theme === 'system') {
+        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        backgroundColor = prefersDarkScheme ? '#0d0d0d' : '#ffffff';
+      } else {
+        backgroundColor = '#ffffff';
+      }
+
+      loadingContainerStyle.innerHTML = `
+        #loading-container {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 100vh;
+          background-color: ${backgroundColor};
+        }
+      `;
+      document.head.appendChild(loadingContainerStyle);
+    </script>
+    <script defer type="module" src="/src/main.jsx"></script>
+  </head>
+  <body>
+    <div id="root">
+      <div id="loading-container"></div>
+    </div>
+  </body>
 </html>
