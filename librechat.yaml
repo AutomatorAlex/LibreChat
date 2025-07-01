@@ -253,17 +253,17 @@ speech:
 
 mcpServers:
   # Using Netlify Functions with streamable-http transport (perfect for hosted LibreChat!)
-  jina-search:
+  jina:
     type: streamable-http
-    url: https://mcps.netlify.app/.netlify/functions/mcp-jina-reader
+    url: https://mcps.netlify.app/mcp/jina
     headers:
       X-MCP-API-Key: "${MCP_API_KEY}"
     timeout: 180000
     initTimeout: 15000
     
-  sequential-thinking:
+  thinking:
     type: streamable-http
-    url: https://mcps.netlify.app/.netlify/functions/mcp-thinking
+    url: https://mcps.netlify.app/mcp/thinking
     headers:
       X-MCP-API-Key: "${MCP_API_KEY}"
     timeout: 180000
@@ -271,7 +271,15 @@ mcpServers:
 
   business-strategy:
     type: streamable-http
-    url: https://mcps.netlify.app/.netlify/functions/mcp-business-strategy
+    url: https://mcps.netlify.app/mcp/business-strategy
+    headers:
+      X-MCP-API-Key: "${MCP_API_KEY}"
+    timeout: 180000
+    initTimeout: 15000
+    
+  stripe:
+    type: streamable-http
+    url: https://mcps.netlify.app/mcp/stripe
     headers:
       X-MCP-API-Key: "${MCP_API_KEY}"
     timeout: 180000
