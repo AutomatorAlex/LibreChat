@@ -2874,7 +2874,6 @@ html {
 @media (display-mode: standalone) {
   /* Hide the default browser UI when in PWA mode */
   body {
-    -webkit-user-select: none;
     -webkit-touch-callout: none;
     -webkit-tap-highlight-color: transparent;
   }
@@ -2958,7 +2957,6 @@ body {
   /* Prevent iOS selection and callouts in PWA mode */
   * {
     -webkit-touch-callout: none;
-    -webkit-user-select: none;
     -webkit-tap-highlight-color: transparent;
   }
   
