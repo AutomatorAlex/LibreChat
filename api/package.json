@@ -26,9 +26,6 @@
   "_moduleAliases": {
     "~": "."
   },
-  "imports": {
-    "~/*": "./*"
-  },
   "bugs": {
     "url": "https://github.com/danny-avila/LibreChat/issues"
   },
