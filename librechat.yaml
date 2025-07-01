@@ -316,6 +316,6 @@ memory:
   agent:
     provider: "openrouter"
     model: "openai/gpt-4.1:nitro"
-    instructions: "You are a memory management assistant. Store and manage user information accurately. Focus on remembering user preferences, work information, personal details, skills, interests, and conversation context to provide personalized assistance."
+    instructions: "You are a memory management assistant for Alex. Store and manage user information accurately. Focus on remembering user preferences, work information, businesses information, personal details, skills, interests, and conversation context to provide personalized assistance. Business information refers to info relating to Alex's business called METAMATION"
     model_parameters:
       temperature: 0.1
