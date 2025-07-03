@@ -59,16 +59,8 @@ export default defineConfig(({ command }) => ({
         start_url: '/',
         scope: '/',
         display: 'standalone',
-        orientation: 'portrait-primary',
         background_color: '#171717',
         theme_color: '#171717',
-        lang: 'en-US',
-        categories: ['productivity', 'communication', 'utilities'],
-        prefer_related_applications: false,
-        display_override: ['window-controls-overlay', 'standalone'],
-        launch_handler: {
-          client_mode: 'focus-existing'
-        },
         icons: [
           {
             src: '/assets/apple-icon-180x180.png',
@@ -92,36 +84,6 @@ export default defineConfig(({ command }) => ({
             purpose: 'any maskable',
           },
         ],
-        shortcuts: [
-          {
-            name: 'New Chat',
-            short_name: 'New Chat',
-            description: 'Start a new conversation',
-            url: '/c/new',
-            icons: [
-              {
-                src: '/assets/apple-icon-180x180.png',
-                sizes: '180x180'
-              }
-            ]
-          }
-        ],
-        screenshots: [
-          {
-            src: '/assets/screenshot-desktop.png',
-            sizes: '1280x720',
-            type: 'image/png',
-            form_factor: 'wide',
-            label: 'LibreChat Desktop'
-          },
-          {
-            src: '/assets/screenshot-mobile.png',
-            sizes: '540x720',
-            type: 'image/png',
-            form_factor: 'narrow',
-            label: 'LibreChat Mobile'
-          }
-        ]
       },
     }),
     // sourcemapExclude({ excludeNodeModules: true }),
