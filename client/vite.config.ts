@@ -105,6 +105,22 @@ export default defineConfig(({ command }) => ({
               }
             ]
           }
+        ],
+        screenshots: [
+          {
+            src: '/assets/screenshot-desktop.png',
+            sizes: '1280x720',
+            type: 'image/png',
+            form_factor: 'wide',
+            label: 'LibreChat Desktop'
+          },
+          {
+            src: '/assets/screenshot-mobile.png',
+            sizes: '540x720',
+            type: 'image/png',
+            form_factor: 'narrow',
+            label: 'LibreChat Mobile'
+          }
         ]
       },
     }),
