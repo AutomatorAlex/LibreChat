@@ -37,6 +37,7 @@ export default defineConfig(({ command }) => ({
       },
       useCredentials: true,
       includeManifestIcons: false,
+      manifest: false, // Disable manifest generation - we're using static manifest.json
       workbox: {
         globPatterns: [
           '**/*.{js,css,html}',
@@ -44,44 +45,13 @@ export default defineConfig(({ command }) => ({
           'assets/icon-*.png',
           'assets/apple-touch-icon*.png',
           'assets/maskable-icon.png',
-          'manifest.webmanifest',
+          'manifest.json', // Include our static manifest
         ],
         globIgnores: ['images/**/*', '**/*.map'],
         maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
         navigateFallbackDenylist: [/^\/oauth/, /^\/api/],
       },
       includeAssets: [],
-      manifest: {
-        id: '/',
-        name: 'LibreChat',
-        short_name: 'LibreChat',
-        description: 'LibreChat - An open source chat application with support for multiple AI models',
-        start_url: '/',
-        scope: '/',
-        display: 'standalone',
-        background_color: '#171717',
-        theme_color: '#171717',
-        icons: [
-          {
-            src: '/assets/apple-icon-180x180.png',
-            sizes: '180x180',
-            type: 'image/png',
-            purpose: 'any maskable',
-          },
-          {
-            src: '/assets/android-icon-192x192.png',
-            sizes: '192x192',
-            type: 'image/png',
-            purpose: 'any maskable',
-          },
-          {
-            src: '/assets/maskable-icon.png',
-            sizes: '512x512',
-            type: 'image/png',
-            purpose: 'any maskable',
-          },
-        ],
-      },
     }),
     // sourcemapExclude({ excludeNodeModules: true }),
     compression({
