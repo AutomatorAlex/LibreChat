@@ -1,7 +1,58 @@
+# For more information, see the Configuration Guide:
+# https://www.librechat.ai/docs/configuration/librechat_yaml
 version: 1.2.1
-# File storage strategy - use firebase for Firebase Storage
+cache: true
 fileStrategy: firebase
+
 interface:
+  customWelcome: "Welcome to LibreChat! Enjoy your experience."
+  mcpServers:
+    placeholder: 'MCP Servers'
+  privacyPolicy:
+    externalUrl: 'https://librechat.ai/privacy-policy'
+    openNewTab: true
+  termsOfService:
+    externalUrl: 'https://librechat.ai/tos'
+    openNewTab: true
+    modalAcceptance: true
+    modalTitle: "Terms of Service for LibreChat"
+    modalContent: |
+      # Terms and Conditions for LibreChat
+
+      *Effective Date: February 18, 2024*
+
+      Welcome to LibreChat, the informational website for the open-source AI chat platform, available at https://librechat.ai. These Terms of Service ("Terms") govern your use of our website and the services we offer. By accessing or using the Website, you agree to be bound by these Terms and our Privacy Policy, accessible at https://librechat.ai//privacy.
+
+      ## 1. Ownership
+
+      Upon purchasing a package from LibreChat, you are granted the right to download and use the code for accessing an admin panel for LibreChat. While you own the downloaded code, you are expressly prohibited from reselling, redistributing, or otherwise transferring the code to third parties without explicit permission from LibreChat.
+
+      ## 2. User Data
+
+      We collect personal data, such as your name, email address, and payment information, as described in our Privacy Policy. This information is collected to provide and improve our services, process transactions, and communicate with you.
+
+      ## 3. Non-Personal Data Collection
+
+      The Website uses cookies to enhance user experience, analyze site usage, and facilitate certain functionalities. By using the Website, you consent to the use of cookies in accordance with our Privacy Policy.
+
+      ## 4. Use of the Website
+
+      You agree to use the Website only for lawful purposes and in a manner that does not infringe the rights of, restrict, or inhibit anyone else's use and enjoyment of the Website. Prohibited behavior includes harassing or causing distress or inconvenience to any person, transmitting obscene or offensive content, or disrupting the normal flow of dialogue within the Website.
+
+      ## 5. Governing Law
+
+      These Terms shall be governed by and construed in accordance with the laws of the United States, without giving effect to any principles of conflicts of law.
+
+      ## 6. Changes to the Terms
+
+      We reserve the right to modify these Terms at any time. We will notify users of any changes by email. Your continued use of the Website after such changes have been notified will constitute your consent to such changes.
+
+      ## 7. Contact Information
+
+      If you have any questions about these Terms, please contact us at contact@librechat.ai.
+
+      By using the Website, you acknowledge that you have read these Terms of Service and agree to be bound by them.
+
   endpointsMenu: true
   modelSelect: true
   parameters: true
@@ -14,11 +65,18 @@ interface:
   temporaryChat: true
   runCode: true
 
+registration:
+  socialLogins: ['github', 'google', 'discord', 'openid', 'facebook', 'apple', 'saml']
+
+actions:
+  allowedDomains:
+    - "swapi.dev"
+    - "librechat.ai"
+    - "google.com"
+
 endpoints:
   agents:
-    # Default recursion depth for agents, increased from 25 to 50
     recursionLimit: 50
-    # Maximum recursion depth for agents, set to 100 for complex tool chains
     maxRecursionLimit: 100
   custom:
     # Cerebras-optimized models via OpenRouter
@@ -33,13 +91,11 @@ endpoints:
           - meta-llama/llama-3.3-70b-instruct
           - meta-llama/llama-3.1-70b-instruct
           - meta-llama/llama-3.1-8b-instruct
-
       titleConvo: true
       titleModel: openai/gpt-4.1-mini:nitro
       dropParams:
         - stop
       modelDisplayLabel: "OpenRouter (Cerebras)"
-      # Force all requests through Cerebras
       providerRouting:
         order:
           - cerebras
@@ -209,6 +265,7 @@ endpoints:
       agents:
         code: true
         tools: true
+
   openAI:
     disabled: true
 
@@ -250,9 +307,8 @@ speech:
       automaticPlayback: true
       playbackRate: 1
       cacheTTS: true
-
+      
 mcpServers:
-  # Using Netlify Functions with streamable-http transport (perfect for hosted LibreChat!)
   jina:
     type: streamable-http
     url: https://mcps.netlify.app/mcp/jina
@@ -285,7 +341,6 @@ mcpServers:
     timeout: 180000
     initTimeout: 15000
 
-  # Working N8N MCPs (keep these as SSE)
   n8n-business-tools-mcp:
     type: sse
     url: https://n8n.metamation.net/mcp/12bd30ab-6657-4d89-95f7-5e6c818d81e6/sse
@@ -302,17 +357,11 @@ mcpServers:
     timeout: 180000
     initTimeout: 15000
 
-# Memory configuration for user memories
 memory:
-  # Enable memory functionality
   disabled: false
-  # Restrict memory keys to specific values to limit memory storage and improve consistency
   validKeys: ["preferences", "work_info", "personal_info", "business_info", "skills", "interests", "context"]
-  # Maximum token limit for memory storage
   tokenLimit: 10000
-  # Enable personalization features
   personalize: true
-  # Memory agent configuration - define inline with OpenRouter
   agent:
     provider: "openrouter"
     model: "openai/gpt-4.1:nitro"
