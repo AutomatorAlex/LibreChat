@@ -74,6 +74,61 @@ const MermaidBlock: React.FC<MermaidBlockProps> = ({ code, className }) => {
     };
   }, [code]);
 
+  const [modalOpen, setModalOpen] = useState(false);
+  const [zoom, setZoom] = useState(1);
+  const [pan, setPan] = useState({ x: 0, y: 0 });
+  const panRef = useRef<{ x: number; y: number } | null>(null);
+
+  // Reset zoom/pan when modal closes or svg changes
+  useEffect(() => {
+    if (!modalOpen) {
+      setZoom(1);
+      setPan({ x: 0, y: 0 });
+    }
+  }, [modalOpen, svg]);
+
+  // Mouse drag for panning
+  function handleMouseDown(e: React.MouseEvent) {
+    if (e.button !== 0) return;
+    // Store pan and mouse start position in a type-safe way
+    panRef.current = {
+      x: pan.x,
+      y: pan.y,
+      mouseStartX: e.clientX,
+      mouseStartY: e.clientY,
+    } as any;
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseup', handleMouseUp);
+  }
+  function handleMouseMove(e: MouseEvent) {
+    if (!panRef.current) return;
+    setPan({
+      x: (panRef.current as any).x + (e.clientX - (panRef.current as any).mouseStartX),
+      y: (panRef.current as any).y + (e.clientY - (panRef.current as any).mouseStartY),
+    });
+  }
+  function handleMouseUp() {
+    panRef.current = null;
+    window.removeEventListener('mousemove', handleMouseMove);
+    window.removeEventListener('mouseup', handleMouseUp);
+  }
+
+  // Wheel zoom
+  function handleWheel(e: React.WheelEvent) {
+    e.preventDefault();
+    setZoom((z) => Math.max(0.2, Math.min(5, z - e.deltaY * 0.001)));
+  }
+
+  // Keyboard ESC to close modal
+  useEffect(() => {
+    if (!modalOpen) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') setModalOpen(false);
+    }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [modalOpen]);
+
   if (error) {
     return (
       <pre className={className || 'mermaid'}>
@@ -89,15 +144,114 @@ const MermaidBlock: React.FC<MermaidBlockProps> = ({ code, className }) => {
     return <div className={className || 'mermaid'} style={{ minHeight: 40 }} />;
   }
 
-  // eslint-disable-next-line react/no-danger
+  // Main diagram with click-to-zoom
   return (
-    <div
-      className={className || 'mermaid'}
-      dangerouslySetInnerHTML={{ __html: svg }}
-      aria-label="Mermaid diagram"
-      tabIndex={0}
-      style={{ overflowX: 'auto', maxWidth: '100%' }}
-    />
+    <>
+      <div
+        className={className || 'mermaid'}
+        dangerouslySetInnerHTML={{ __html: svg }}
+        aria-label="Mermaid diagram"
+        tabIndex={0}
+        style={{ overflowX: 'auto', maxWidth: '100%', cursor: 'zoom-in' }}
+        onClick={() => setModalOpen(true)}
+        title="Click to zoom"
+      />
+      {modalOpen && (
+        <div
+          style={{
+            position: 'fixed',
+            zIndex: 10000,
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            background: 'rgba(0,0,0,0.7)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'grab',
+          }}
+          onClick={() => setModalOpen(false)}
+        >
+          <div
+            style={{
+              position: 'relative',
+              background: '#fff',
+              borderRadius: 8,
+              boxShadow: '0 2px 16px rgba(0,0,0,0.3)',
+              padding: 16,
+              maxWidth: '90vw',
+              maxHeight: '90vh',
+              overflow: 'auto',
+              cursor: 'default',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div style={{ marginBottom: 8, display: 'flex', alignItems: 'center', gap: 8 }}>
+              <button
+                onClick={() => setZoom((z) => Math.max(0.2, z - 0.2))}
+                style={{ fontSize: 18, padding: '2px 8px' }}
+                aria-label="Zoom out"
+              >
+                −
+              </button>
+              <span style={{ minWidth: 40, textAlign: 'center' }}>{Math.round(zoom * 100)}%</span>
+              <button
+                onClick={() => setZoom((z) => Math.min(5, z + 0.2))}
+                style={{ fontSize: 18, padding: '2px 8px' }}
+                aria-label="Zoom in"
+              >
+                +
+              </button>
+              <button
+                onClick={() => {
+                  setZoom(1);
+                  setPan({ x: 0, y: 0 });
+                }}
+                style={{ marginLeft: 12, fontSize: 14 }}
+                aria-label="Reset zoom"
+              >
+                Reset
+              </button>
+              <button
+                onClick={() => setModalOpen(false)}
+                style={{ marginLeft: 'auto', fontSize: 16 }}
+                aria-label="Close"
+              >
+                ✕
+              </button>
+            </div>
+            <div
+              style={{
+                width: '80vw',
+                height: '70vh',
+                overflow: 'auto',
+                background: '#fafafa',
+                border: '1px solid #eee',
+                borderRadius: 4,
+                position: 'relative',
+                cursor: 'grab',
+              }}
+              onMouseDown={handleMouseDown}
+              onWheel={handleWheel}
+            >
+              <div
+                style={{
+                  transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
+                  transformOrigin: '0 0',
+                  transition: 'transform 0.1s',
+                  width: 'fit-content',
+                  height: 'fit-content',
+                  pointerEvents: 'auto',
+                }}
+                // eslint-disable-next-line react/no-danger
+                dangerouslySetInnerHTML={{ __html: svg }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
