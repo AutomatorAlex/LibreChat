@@ -10,33 +10,63 @@ const MermaidBlock: React.FC<MermaidBlockProps> = ({ code, className }) => {
   const [error, setError] = useState<string | null>(null);
   const idRef = useRef(`mermaid-${Math.random().toString(36).substr(2, 9)}`);
 
+  // Attempt to auto-correct common Mermaid syntax issues
+  function autoCorrectMermaid(raw: string): string {
+    let fixed = raw;
+
+    // Replace <br/> and <br> with line breaks
+    fixed = fixed.replace(/<br\s*\/?>/gi, '\n');
+
+    // Replace smart quotes with regular quotes
+    fixed = fixed.replace(/[“”]/g, '"').replace(/[‘’]/g, "'");
+
+    // Remove trailing spaces on each line
+    fixed = fixed
+      .split('\n')
+      .map((line) => line.replace(/\s+$/, ''))
+      .join('\n');
+
+    // Remove zero-width spaces and non-breaking spaces
+    fixed = fixed.replace(/[\u200B\u00A0]/g, '');
+
+    // Remove HTML tags except for <b>, <i>, <u>
+    fixed = fixed.replace(/<(?!b|i|u)[^>]+>/gi, '');
+
+    // Remove leading/trailing blank lines
+    fixed = fixed.replace(/^\s*\n/gm, '').replace(/\n\s*$/gm, '');
+
+    return fixed;
+  }
+
   useEffect(() => {
     let isMounted = true;
     let mermaid: any = null;
 
-    // Only run on client
+    // Reset SVG and error on code change to avoid stale state
+    setSvg(null);
+    setError(null);
+
     if (typeof window === 'undefined') return;
 
-    // Dynamic import to avoid SSR issues
+    const corrected = autoCorrectMermaid(code);
+
     import('mermaid')
       .then((mod) => {
         mermaid = mod.default || mod;
-        // Initialize with strict security
         mermaid.initialize({
           startOnLoad: false,
           securityLevel: 'strict',
           theme: 'default',
         });
-        // Render SVG
-        return mermaid.render(idRef.current, code);
+        return mermaid.render(idRef.current, corrected);
       })
       .then(({ svg: svgString }) => {
         if (isMounted) setSvg(svgString);
       })
-      .catch((err) => {
+      .catch((_err) => {
         if (isMounted) setError('Failed to render Mermaid diagram');
         // Optionally log error
-        // console.error('Mermaid render error:', err);
+        // console.error('Mermaid render error:', _err);
       });
 
     return () => {
