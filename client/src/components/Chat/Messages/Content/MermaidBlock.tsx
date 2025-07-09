@@ -53,11 +53,44 @@ const MermaidBlock: React.FC<MermaidBlockProps> = ({ code, className }) => {
     import('mermaid')
       .then((mod) => {
         mermaid = mod.default || mod;
+        // Use proven config from Artifacts/Mermaid.tsx for robust rendering
         mermaid.initialize({
           startOnLoad: false,
-          securityLevel: 'strict',
-          theme: 'default',
+          theme: 'base',
+          securityLevel: 'sandbox',
+          suppressErrorRendering: true,
+          themeVariables: {
+            background: '#282C34',
+            primaryColor: '#333842',
+            secondaryColor: '#333842',
+            tertiaryColor: '#333842',
+            primaryTextColor: '#ABB2BF',
+            secondaryTextColor: '#ABB2BF',
+            lineColor: '#636D83',
+            fontSize: '16px',
+            nodeBorder: '#636D83',
+            mainBkg: '#282C34',
+            altBackground: '#282C34',
+            textColor: '#ABB2BF',
+            edgeLabelBackground: '#282C34',
+            clusterBkg: '#282C34',
+            clusterBorder: '#636D83',
+            labelBoxBkgColor: '#333842',
+            labelBoxBorderColor: '#636D83',
+            labelTextColor: '#ABB2BF',
+          },
+          flowchart: {
+            curve: 'basis',
+            nodeSpacing: 50,
+            rankSpacing: 50,
+            diagramPadding: 8,
+            htmlLabels: true,
+            useMaxWidth: true,
+            padding: 15,
+            wrappingWidth: 200,
+          },
         });
+        // Remove custom parseError handler to avoid blocking rendering
         return mermaid.render(idRef.current, corrected);
       })
       .then(({ svg: svgString }) => {
