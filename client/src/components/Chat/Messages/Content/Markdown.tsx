@@ -1,4 +1,5 @@
 import React, { memo, useMemo, useRef, useEffect } from 'react';
+import MermaidBlock from './MermaidBlock';
 import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
 import supersub from 'remark-supersub';
@@ -48,6 +49,10 @@ export const code: React.ElementType = memo(({ className, children }: TCodeProps
     resetCounter();
   }, [children, resetCounter]);
 
+  if (lang === 'mermaid' && typeof children === 'string') {
+    return <MermaidBlock code={children} className={className} />;
+  }
+
   if (isMath) {
     return <>{children}</>;
   } else if (isSingleLine) {
@@ -71,6 +76,10 @@ export const code: React.ElementType = memo(({ className, children }: TCodeProps
 export const codeNoExecution: React.ElementType = memo(({ className, children }: TCodeProps) => {
   const match = /language-(\w+)/.exec(className ?? '');
   const lang = match && match[1];
+
+  if (lang === 'mermaid' && typeof children === 'string') {
+    return <MermaidBlock code={children} className={className} />;
+  }
 
   if (lang === 'math') {
     return children;
