@@ -1,7 +1,24 @@
 import React from 'react';
 import { useLocalize } from '~/hooks';
 
+import MermaidBlock from './MermaidBlock';
+
 function OptimizedCodeBlock({ text, maxHeight = 320 }: { text: string; maxHeight?: number }) {
+  // Detect if this is a Mermaid diagram (very basic: starts with "graph", "flowchart", "sequenceDiagram", etc.)
+  const isMermaid =
+    typeof text === 'string' &&
+    /^\s*(graph|flowchart|sequenceDiagram|classDiagram|stateDiagram|erDiagram|journey|gantt|pie|mindmap|timeline|gitGraph|quadrantChart|c4Context|c4Container|c4Component|c4Dynamic|requirementDiagram|blockDiagram|packetDiagram|radar)/.test(
+      text.trim(),
+    );
+
+  if (isMermaid) {
+    return (
+      <div style={{ maxHeight, overflow: 'auto' }}>
+        <MermaidBlock code={text} />
+      </div>
+    );
+  }
+
   return (
     <div
       className="rounded-lg bg-surface-tertiary p-2 text-xs text-text-primary"
