@@ -63,7 +63,7 @@ const MermaidBlock: React.FC<MermaidBlockProps> = ({ code, className }) => {
       .then(({ svg: svgString }) => {
         if (isMounted) setSvg(svgString);
       })
-      .catch((_err) => {
+      .catch(() => {
         if (isMounted) setError('Failed to render Mermaid diagram');
         // Optionally log error
         // console.error('Mermaid render error:', _err);
@@ -211,14 +211,16 @@ const MermaidBlock: React.FC<MermaidBlockProps> = ({ code, className }) => {
                 style={{ marginLeft: 12, fontSize: 14 }}
                 aria-label="Reset zoom"
               >
-                Reset
+                {/* i18n: Reset */}
+                {'Reset'}
               </button>
               <button
                 onClick={() => setModalOpen(false)}
                 style={{ marginLeft: 'auto', fontSize: 16 }}
                 aria-label="Close"
               >
-                ✕
+                {/* i18n: Close */}
+                {'✕'}
               </button>
             </div>
             <div
