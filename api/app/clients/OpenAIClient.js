@@ -1,15 +1,3 @@
-// DEBUG PATCH: Log all OpenRouter error responses for diagnosis
-const originalFetch = global.fetch;
-global.fetch = async (...args) => {
-  const res = await originalFetch(...args);
-  if (!res.ok) {
-    const body = await res.text();
-    console.error('[OpenRouter DEBUG] Non-2xx response:', res.status, body);
-  }
-  return res;
-};
-// END DEBUG PATCH
-
 const { OllamaClient } = require('./OllamaClient');
 const { HttpsProxyAgent } = require('https-proxy-agent');
 const { SplitStreamHandler, CustomOpenAIClient: OpenAI } = require('@librechat/agents');
