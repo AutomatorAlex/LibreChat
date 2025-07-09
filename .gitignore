@@ -41,16 +41,16 @@ client/public/main.js.LICENSE.txt
 __azurite**
 __blobstorage__/**/*
 
-# Dependency directorys
+# Dependency directories
 # Deployed apps should consider commenting these lines out:
 # see https://npmjs.org/doc/faq.html#Should-I-check-my-node_modules-folder-into-git
 node_modules/
-meili_data/
 api/node_modules/
 client/node_modules/
 bower_components/
-*.d.ts
-!vite-env.d.ts
+# Ignore generated type definitions, but not all .d.ts files
+# !/client/src/@types/i18next.d.ts (see below for explicit inclusion)
+# !vite-env.d.ts (see below for explicit inclusion)
 
 # AI
 .clineignore
@@ -66,7 +66,7 @@ bower_components/
 #config file
 librechat.yml
 
-# Environment
+# Environment and secrets
 .npmrc
 .env*
 my.secrets
@@ -92,6 +92,13 @@ config.local.ts
 junit.xml
 **/.venv/
 **/venv/
+# Yarn and pnpm
+yarn.lock
+.pnpm-debug.log
+# Parcel
+.parcel-cache
+# ESLint cache
+.eslintcache
 
 # docker override file
 docker-compose.override.yaml
@@ -124,3 +131,16 @@ helm/**/.values.yaml
 
 # SAML Idp cert
 *.cert
+
+# EditorConfig
+.editorconfig
+
+# Mac system files
+.DS_Store
+
+# VSCode settings
+.vscode/*
+!.vscode/settings.json
+
+# End of file
+packages/data-schemas/src/types/bcryptjs.d.ts
