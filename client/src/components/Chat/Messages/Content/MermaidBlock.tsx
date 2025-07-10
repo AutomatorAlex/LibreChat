@@ -91,6 +91,13 @@ const MermaidBlock: React.FC<MermaidBlockProps> = ({ code, className }) => {
   const [zoom, setZoom] = useState(1);
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const panRef = useRef<{ x: number; y: number } | null>(null);
+  const transformRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (transformRef.current) {
+      transformRef.current.style.transform = `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`;
+    }
+  }, [pan, zoom]);
 
   // Reset zoom/pan when modal closes or svg changes
   useEffect(() => {
@@ -181,7 +188,7 @@ const MermaidBlock: React.FC<MermaidBlockProps> = ({ code, className }) => {
             <div className="mb-2 flex items-center gap-2">
               <button
                 onClick={() => setZoom((z) => Math.max(0.2, z - 0.2))}
-                style={{ fontSize: 18, padding: '2px 8px' }}
+                className="px-2 py-0.5 text-lg"
                 aria-label="Zoom out"
               >
                 −
@@ -189,7 +196,7 @@ const MermaidBlock: React.FC<MermaidBlockProps> = ({ code, className }) => {
               <span className="min-w-[40px] text-center">{Math.round(zoom * 100)}%</span>
               <button
                 onClick={() => setZoom((z) => Math.min(5, z + 0.2))}
-                style={{ fontSize: 18, padding: '2px 8px' }}
+                className="px-2 py-0.5 text-lg"
                 aria-label="Zoom in"
               >
                 +
@@ -199,7 +206,7 @@ const MermaidBlock: React.FC<MermaidBlockProps> = ({ code, className }) => {
                   setZoom(1);
                   setPan({ x: 0, y: 0 });
                 }}
-                style={{ marginLeft: 12, fontSize: 14 }}
+                className="ml-3 text-sm"
                 aria-label="Reset zoom"
               >
                 {/* i18n: Reset */}
@@ -207,7 +214,7 @@ const MermaidBlock: React.FC<MermaidBlockProps> = ({ code, className }) => {
               </button>
               <button
                 onClick={() => setModalOpen(false)}
-                style={{ marginLeft: 'auto', fontSize: 16 }}
+                className="ml-auto text-base"
                 aria-label="Close"
               >
                 {/* i18n: Close */}
@@ -221,8 +228,7 @@ const MermaidBlock: React.FC<MermaidBlockProps> = ({ code, className }) => {
             >
               <div
                 className="pointer-events-auto h-fit w-fit origin-top-left transition-transform duration-100"
-                style={{ transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})` }}
-                // eslint-disable-next-line react/no-danger
+                ref={transformRef}
                 dangerouslySetInnerHTML={{ __html: svg }}
               />
             </div>
