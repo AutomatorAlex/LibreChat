@@ -177,6 +177,7 @@ endpoints:
         default:
           - x-ai/grok-3:nitro
           - x-ai/grok-3-mini:nitro
+          - x-ai/grok-4:nitro
       titleConvo: true
       titleModel: openai/gpt-4.1-mini:nitro
       dropParams:
