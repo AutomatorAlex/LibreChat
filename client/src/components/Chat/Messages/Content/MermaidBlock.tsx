@@ -1,4 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
+import DOMPurify from 'dompurify';
+import { useMermaid } from '../../../../hooks/useMermaid';
+import { dompurifyConfig } from '../../../../utils/mermaid.config';
+import { hashId } from '~/utils/hash';
 
 type MermaidBlockProps = {
   code: string;
@@ -8,7 +12,8 @@ type MermaidBlockProps = {
 const MermaidBlock: React.FC<MermaidBlockProps> = ({ code, className }) => {
   const [svg, setSvg] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const idRef = useRef(`mermaid-${Math.random().toString(36).substr(2, 9)}`);
+  const idRef = useRef(`mermaid-${hashId(code)}`);
+  const getMermaid = useMermaid();
 
   // Attempt to auto-correct common Mermaid syntax issues
   function autoCorrectMermaid(raw: string): string {
@@ -18,7 +23,7 @@ const MermaidBlock: React.FC<MermaidBlockProps> = ({ code, className }) => {
     fixed = fixed.replace(/<br\s*\/?>/gi, '\n');
 
     // Replace smart quotes with regular quotes
-    fixed = fixed.replace(/[“”]/g, '"').replace(/[‘’]/g, "'");
+    fixed = fixed.replace(/[""]/g, '"').replace(/['']/g, "'");
 
     // Remove trailing spaces on each line
     fixed = fixed
@@ -41,7 +46,6 @@ const MermaidBlock: React.FC<MermaidBlockProps> = ({ code, className }) => {
 
   useEffect(() => {
     let isMounted = true;
-    let mermaid: any = null;
 
     // Reset SVG and error on code change to avoid stale state
     setSvg(null);
@@ -51,54 +55,23 @@ const MermaidBlock: React.FC<MermaidBlockProps> = ({ code, className }) => {
 
     const corrected = autoCorrectMermaid(code);
 
-    import('mermaid')
-      .then((mod) => {
-        mermaid = mod.default || mod;
-        // Use proven config from Artifacts/Mermaid.tsx for robust rendering
-        mermaid.initialize({
-          startOnLoad: false,
-          theme: 'base',
-          securityLevel: 'sandbox',
-          suppressErrorRendering: true,
-          themeVariables: {
-            background: '#282C34',
-            primaryColor: '#333842',
-            secondaryColor: '#333842',
-            tertiaryColor: '#333842',
-            primaryTextColor: '#ABB2BF',
-            secondaryTextColor: '#ABB2BF',
-            lineColor: '#636D83',
-            fontSize: '16px',
-            nodeBorder: '#636D83',
-            mainBkg: '#282C34',
-            altBackground: '#282C34',
-            textColor: '#ABB2BF',
-            edgeLabelBackground: '#282C34',
-            clusterBkg: '#282C34',
-            clusterBorder: '#636D83',
-            labelBoxBkgColor: '#333842',
-            labelBoxBorderColor: '#636D83',
-            labelTextColor: '#ABB2BF',
-          },
-          flowchart: {
-            curve: 'basis',
-            nodeSpacing: 50,
-            rankSpacing: 50,
-            diagramPadding: 8,
-            htmlLabels: true,
-            useMaxWidth: true,
-            padding: 15,
-            wrappingWidth: 200,
-          },
-        });
-        // Remove custom parseError handler to avoid blocking rendering
-        return mermaid.render(idRef.current, corrected);
-      })
-      .then(({ svg: svgString }) => {
-        if (isMounted) setSvg(svgString);
+    getMermaid()
+      .then((mermaid) => mermaid.render(idRef.current, corrected))
+      .then(({ svg: rawSvg }) => {
+        if (isMounted) {
+          const titledSvg = rawSvg.replace(
+            /<svg([^>]*)>/,
+            '<svg$1 role="img" aria-labelledby="title-' +
+              idRef.current +
+              '"><title id="title-' +
+              idRef.current +
+              '">Mermaid diagram</title>',
+          );
+          const cleanSvg = DOMPurify.sanitize(titledSvg, dompurifyConfig);
+          setSvg(cleanSvg);
+        }
       })
       .catch((err) => {
-        // Surface the actual error for diagnosis
         if (isMounted) {
           setError(
             err && (err.message || err.toString())
@@ -106,15 +79,13 @@ const MermaidBlock: React.FC<MermaidBlockProps> = ({ code, className }) => {
               : 'Failed to render Mermaid diagram',
           );
         }
-        // Also log the error and the sanitized code for developer debugging
-        // eslint-disable-next-line no-console
         console.error('Mermaid render error:', err, '\nSanitized code:', corrected);
       });
 
     return () => {
       isMounted = false;
     };
-  }, [code]);
+  }, [code, getMermaid]);
 
   const [modalOpen, setModalOpen] = useState(false);
   const [zoom, setZoom] = useState(1);
@@ -183,53 +154,31 @@ const MermaidBlock: React.FC<MermaidBlockProps> = ({ code, className }) => {
 
   if (!svg) {
     // Avoid SSR/hydration mismatch: render nothing until client
-    return <div className={className || 'mermaid'} style={{ minHeight: 40 }} />;
+    return <div className={`${className || 'mermaid'} min-h-[40px]`} />;
   }
 
   // Main diagram with click-to-zoom
   return (
     <>
       <div
-        className={className || 'mermaid'}
-        dangerouslySetInnerHTML={{ __html: svg }}
+        className={`${className || 'mermaid'} max-w-full cursor-zoom-in overflow-x-auto`}
+        role="img"
         aria-label="Mermaid diagram"
         tabIndex={0}
-        style={{ overflowX: 'auto', maxWidth: '100%', cursor: 'zoom-in' }}
+        dangerouslySetInnerHTML={{ __html: svg }}
         onClick={() => setModalOpen(true)}
         title="Click to zoom"
       />
       {modalOpen && (
         <div
-          style={{
-            position: 'fixed',
-            zIndex: 10000,
-            top: 0,
-            left: 0,
-            width: '100vw',
-            height: '100vh',
-            background: 'rgba(0,0,0,0.7)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'grab',
-          }}
+          className="fixed inset-0 z-[10000] flex h-screen w-screen cursor-grab items-center justify-center bg-black bg-opacity-70"
           onClick={() => setModalOpen(false)}
         >
           <div
-            style={{
-              position: 'relative',
-              background: '#fff',
-              borderRadius: 8,
-              boxShadow: '0 2px 16px rgba(0,0,0,0.3)',
-              padding: 16,
-              maxWidth: '90vw',
-              maxHeight: '90vh',
-              overflow: 'auto',
-              cursor: 'default',
-            }}
+            className="relative max-h-[90vh] max-w-[90vw] cursor-default overflow-auto rounded-lg bg-white p-4 shadow-[0_2px_16px_rgba(0,0,0,0.3)]"
             onClick={(e) => e.stopPropagation()}
           >
-            <div style={{ marginBottom: 8, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div className="mb-2 flex items-center gap-2">
               <button
                 onClick={() => setZoom((z) => Math.max(0.2, z - 0.2))}
                 style={{ fontSize: 18, padding: '2px 8px' }}
@@ -237,7 +186,7 @@ const MermaidBlock: React.FC<MermaidBlockProps> = ({ code, className }) => {
               >
                 −
               </button>
-              <span style={{ minWidth: 40, textAlign: 'center' }}>{Math.round(zoom * 100)}%</span>
+              <span className="min-w-[40px] text-center">{Math.round(zoom * 100)}%</span>
               <button
                 onClick={() => setZoom((z) => Math.min(5, z + 0.2))}
                 style={{ fontSize: 18, padding: '2px 8px' }}
@@ -266,28 +215,13 @@ const MermaidBlock: React.FC<MermaidBlockProps> = ({ code, className }) => {
               </button>
             </div>
             <div
-              style={{
-                width: '80vw',
-                height: '70vh',
-                overflow: 'auto',
-                background: '#fafafa',
-                border: '1px solid #eee',
-                borderRadius: 4,
-                position: 'relative',
-                cursor: 'grab',
-              }}
+              className="relative h-[70vh] w-[80vw] cursor-grab overflow-auto rounded border border-gray-200 bg-gray-50"
               onMouseDown={handleMouseDown}
               onWheel={handleWheel}
             >
               <div
-                style={{
-                  transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
-                  transformOrigin: '0 0',
-                  transition: 'transform 0.1s',
-                  width: 'fit-content',
-                  height: 'fit-content',
-                  pointerEvents: 'auto',
-                }}
+                className="pointer-events-auto h-fit w-fit origin-top-left transition-transform duration-100"
+                style={{ transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})` }}
                 // eslint-disable-next-line react/no-danger
                 dangerouslySetInnerHTML={{ __html: svg }}
               />

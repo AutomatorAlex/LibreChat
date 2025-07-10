@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import mermaid from 'mermaid';
+import DOMPurify from 'dompurify';
+import { useMermaid } from '~/hooks/useMermaid';
+import { dompurifyConfig } from '~/utils/mermaid.config';
+import { hashId } from '~/utils/hash';
 import { TransformWrapper, TransformComponent, ReactZoomPanPinchRef } from 'react-zoom-pan-pinch';
-// import { Button } from '/components/ui/Button'; // Live component
 import { Button } from '~/components/ui/Button';
 import { ZoomIn, ZoomOut, RefreshCw } from 'lucide-react';
 
@@ -9,86 +11,35 @@ interface MermaidDiagramProps {
   content: string;
 }
 
-/** Note: this is just for testing purposes, don't actually use this component */
 const MermaidDiagram: React.FC<MermaidDiagramProps> = ({ content }) => {
   const mermaidRef = useRef<HTMLDivElement>(null);
   const transformRef = useRef<ReactZoomPanPinchRef>(null);
   const [isRendered, setIsRendered] = useState(false);
+  const idRef = useRef(`mermaid-${hashId(content)}`);
+  const getMermaid = useMermaid();
 
   useEffect(() => {
-    mermaid.initialize({
-      startOnLoad: false,
-      theme: 'base',
-      securityLevel: 'sandbox',
-      themeVariables: {
-        background: '#282C34',
-        primaryColor: '#333842',
-        secondaryColor: '#333842',
-        tertiaryColor: '#333842',
-        primaryTextColor: '#ABB2BF',
-        secondaryTextColor: '#ABB2BF',
-        lineColor: '#636D83',
-        fontSize: '16px',
-        nodeBorder: '#636D83',
-        mainBkg: '#282C34',
-        altBackground: '#282C34',
-        textColor: '#ABB2BF',
-        edgeLabelBackground: '#282C34',
-        clusterBkg: '#282C34',
-        clusterBorder: '#636D83',
-        labelBoxBkgColor: '#333842',
-        labelBoxBorderColor: '#636D83',
-        labelTextColor: '#ABB2BF',
-      },
-      flowchart: {
-        curve: 'basis',
-        nodeSpacing: 50,
-        rankSpacing: 50,
-        diagramPadding: 8,
-        htmlLabels: true,
-        useMaxWidth: true,
-        padding: 15,
-        wrappingWidth: 200,
-      },
-    });
-
-    const renderDiagram = async () => {
-      if (mermaidRef.current) {
-        try {
-          const { svg } = await mermaid.render('mermaid-diagram', content);
-          mermaidRef.current.innerHTML = svg;
-
-          const svgElement = mermaidRef.current.querySelector('svg');
-          if (svgElement) {
-            svgElement.style.width = '100%';
-            svgElement.style.height = '100%';
-
-            const pathElements = svgElement.querySelectorAll('path');
-            pathElements.forEach((path) => {
-              path.style.strokeWidth = '1.5px';
-            });
-
-            const rectElements = svgElement.querySelectorAll('rect');
-            rectElements.forEach((rect) => {
-              const parent = rect.parentElement;
-              if (parent && parent.classList.contains('node')) {
-                rect.style.stroke = '#636D83';
-                rect.style.strokeWidth = '1px';
-              } else {
-                rect.style.stroke = 'none';
-              }
-            });
-          }
-          setIsRendered(true);
-        } catch (error) {
-          console.error('Mermaid rendering error:', error);
+    let isMounted = true;
+    getMermaid()
+      .then((m) => m.render(idRef.current, content))
+      .then(({ svg: rawSvg }) => {
+        if (!isMounted || !mermaidRef.current) return;
+        // inject title into SVG for accessibility
+        const titledSvg = rawSvg.replace(/<svg([^>]*)>/, '<svg$1><title>Mermaid diagram</title>');
+        const cleanSvg = DOMPurify.sanitize(titledSvg, dompurifyConfig);
+        mermaidRef.current.innerHTML = cleanSvg;
+        setIsRendered(true);
+      })
+      .catch((error) => {
+        console.error('Mermaid rendering error:', error);
+        if (isMounted && mermaidRef.current) {
           mermaidRef.current.innerHTML = 'Error rendering diagram';
         }
-      }
+      });
+    return () => {
+      isMounted = false;
     };
-
-    renderDiagram();
-  }, [content]);
+  }, [content, getMermaid]);
 
   const centerAndFitDiagram = () => {
     if (transformRef.current && mermaidRef.current) {
@@ -104,44 +55,6 @@ const MermaidDiagram: React.FC<MermaidDiagramProps> = ({ content }) => {
     }
   }, [isRendered]);
 
-  const handlePanning = () => {
-    if (transformRef.current) {
-      const { state, instance } = (transformRef.current as ReactZoomPanPinchRef | undefined) ?? {};
-      if (!state || !instance) {
-        return;
-      }
-      const { scale, positionX, positionY } = state;
-      const { wrapperComponent, contentComponent } = instance;
-
-      if (wrapperComponent && contentComponent) {
-        const wrapperRect = wrapperComponent.getBoundingClientRect();
-        const contentRect = contentComponent.getBoundingClientRect();
-        const maxX = wrapperRect.width - contentRect.width * scale;
-        const maxY = wrapperRect.height - contentRect.height * scale;
-
-        let newX = positionX;
-        let newY = positionY;
-
-        if (newX > 0) {
-          newX = 0;
-        }
-        if (newY > 0) {
-          newY = 0;
-        }
-        if (newX < maxX) {
-          newX = maxX;
-        }
-        if (newY < maxY) {
-          newY = maxY;
-        }
-
-        if (newX !== positionX || newY !== positionY) {
-          instance.setTransformState(scale, newX, newY);
-        }
-      }
-    }
-  };
-
   return (
     <div className="relative h-screen w-screen cursor-move bg-[#282C34] p-5">
       <TransformWrapper
@@ -151,21 +64,18 @@ const MermaidDiagram: React.FC<MermaidDiagramProps> = ({ content }) => {
         maxScale={4}
         limitToBounds={false}
         centerOnInit={true}
-        initialPositionY={0}
         wheel={{ step: 0.1 }}
-        panning={{ velocityDisabled: true }}
-        alignmentAnimation={{ disabled: true }}
-        onPanning={handlePanning}
       >
         {({ zoomIn, zoomOut }) => (
           <>
             <TransformComponent
-              wrapperStyle={{ width: '100%', height: '100%', overflow: 'hidden' }}
+              wrapperStyle={{
+                width: '100%',
+                height: '100%',
+                overflow: 'hidden',
+              }}
             >
-              <div
-                ref={mermaidRef}
-                style={{ width: 'auto', height: 'auto', minWidth: '100%', minHeight: '100%' }}
-              />
+              <div ref={mermaidRef} className="h-full w-full" />
             </TransformComponent>
             <div className="absolute bottom-2 right-2 flex space-x-2">
               <Button onClick={() => zoomIn(0.1)} variant="outline" size="icon">
