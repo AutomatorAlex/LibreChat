@@ -99,11 +99,13 @@ const MermaidBlock: React.FC<MermaidBlockProps> = ({ code, className }) => {
       })
       .catch((err) => {
         // Surface the actual error for diagnosis
-        if (isMounted) setError(
-          (err && (err.message || err.toString()))
-            ? `Mermaid render error: ${err.message || err.toString()}`
-            : 'Failed to render Mermaid diagram'
-        );
+        if (isMounted) {
+          setError(
+            err && (err.message || err.toString())
+              ? `Mermaid render error: ${err.message || err.toString()}`
+              : 'Failed to render Mermaid diagram',
+          );
+        }
         // Also log the error and the sanitized code for developer debugging
         // eslint-disable-next-line no-console
         console.error('Mermaid render error:', err, '\nSanitized code:', corrected);
