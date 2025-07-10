@@ -32,8 +32,9 @@ const MermaidBlock: React.FC<MermaidBlockProps> = ({ code, className }) => {
     // Remove HTML tags except for <b>, <i>, <u>
     fixed = fixed.replace(/<(?!b|i|u)[^>]+>/gi, '');
 
-    // Remove leading/trailing blank lines
+    // Remove leading/trailing blank lines and all surrounding whitespace
     fixed = fixed.replace(/^\s*\n/gm, '').replace(/\n\s*$/gm, '');
+    fixed = fixed.trim();
 
     return fixed;
   }
@@ -96,10 +97,16 @@ const MermaidBlock: React.FC<MermaidBlockProps> = ({ code, className }) => {
       .then(({ svg: svgString }) => {
         if (isMounted) setSvg(svgString);
       })
-      .catch(() => {
-        if (isMounted) setError('Failed to render Mermaid diagram');
-        // Optionally log error
-        // console.error('Mermaid render error:', _err);
+      .catch((err) => {
+        // Surface the actual error for diagnosis
+        if (isMounted) setError(
+          (err && (err.message || err.toString()))
+            ? `Mermaid render error: ${err.message || err.toString()}`
+            : 'Failed to render Mermaid diagram'
+        );
+        // Also log the error and the sanitized code for developer debugging
+        // eslint-disable-next-line no-console
+        console.error('Mermaid render error:', err, '\nSanitized code:', corrected);
       });
 
     return () => {
