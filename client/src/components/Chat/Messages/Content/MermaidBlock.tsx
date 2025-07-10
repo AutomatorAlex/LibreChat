@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import DOMPurify from 'dompurify';
 import { useMermaid } from '../../../../hooks/useMermaid';
 import { dompurifyConfig } from '../../../../utils/mermaid.config';
@@ -15,34 +15,127 @@ const MermaidBlock: React.FC<MermaidBlockProps> = ({ code, className }) => {
   const idRef = useRef(`mermaid-${hashId(code)}`);
   const getMermaid = useMermaid();
 
+  // Fix incomplete node definitions that cause parse errors
+  const fixIncompleteNodes = useCallback((input: string): string => {
+    const lines = input.split('\n');
+    const fixedLines = lines.map((line) => {
+      let fixed = line;
+
+      // Pattern to match incomplete node definitions like "MW[Milky Way" or "SA --> OA[Orion"
+      // This handles all bracket types: [], (), {}, [[]], {{}}
+      const incompleteNodePatterns = [
+        // Standard nodes: id[text without closing ]
+        /(\w+\s*\[)([^\]]*?)(\s*$)/g,
+        // Round nodes: id(text without closing )
+        /(\w+\s*\()([^)]*?)(\s*$)/g,
+        // Decision nodes: id{text without closing }
+        /(\w+\s*\{)([^}]*?)(\s*$)/g,
+        // Subroutine nodes: id[[text without closing ]]
+        /(\w+\s*\[\[)([^\]]*?)(\s*$)/g,
+        // Hexagon nodes: id{{text without closing }}
+        /(\w+\s*\{\{)([^}]*?)(\s*$)/g,
+        // Cylinder nodes: id[(text without closing )]
+        /(\w+\s*\[\()([^)]*?)(\s*$)/g,
+        // Stadium nodes: id([text without closing ])
+        /(\w+\s*\(\[)([^\]]*?)(\s*$)/g,
+      ];
+
+      // Fix each pattern type
+      incompleteNodePatterns.forEach((pattern) => {
+        fixed = fixed.replace(pattern, (match, prefix, text, _suffix) => {
+          // Determine the appropriate closing based on opening
+          let closing = '';
+          if (prefix.includes('[') && !prefix.includes('[[')) {
+            closing = ']';
+          } else if (prefix.includes('(') && !prefix.includes('[(')) {
+            closing = ')';
+          } else if (prefix.includes('{') && !prefix.includes('{{')) {
+            closing = '}';
+          } else if (prefix.includes('[[')) {
+            closing = ']]';
+          } else if (prefix.includes('{{')) {
+            closing = '}}';
+          } else if (prefix.includes('[(')) {
+            closing = ')]';
+          } else if (prefix.includes('([')) {
+            closing = '])';
+          }
+
+          // Only add closing if text exists and doesn't already end with proper closing
+          if (text.trim() && !text.includes(closing)) {
+            return prefix + text + closing;
+          }
+          return match;
+        });
+      });
+
+      return fixed;
+    });
+
+    return fixedLines.join('\n');
+  }, []);
+
+  // Fix incomplete edges and dangling connections
+  const fixIncompleteEdges = useCallback((input: string): string => {
+    const lines = input.split('\n');
+    const fixedLines = lines.map((line) => {
+      let fixed = line.trim();
+
+      // Remove lines that are just dangling arrows with no target
+      if (/^\s*\w+\s*(-->|---|-.->|==>|~~>)\s*$/.test(fixed)) {
+        return ''; // Remove incomplete edge
+      }
+
+      // Fix edges that point to incomplete nodes in the same line
+      // Pattern: "source --> target[incomplete"
+      fixed = fixed.replace(/(\w+\s*(?:-->|---|-.->|==>|~~>)\s*\w+\s*\[)([^\]]*?)(\s*$)/, '$1$2]');
+      fixed = fixed.replace(/(\w+\s*(?:-->|---|-.->|==>|~~>)\s*\w+\s*\()([^)]*?)(\s*$)/, '$1$2)');
+      fixed = fixed.replace(/(\w+\s*(?:-->|---|-.->|==>|~~>)\s*\w+\s*\{)([^}]*?)(\s*$)/, '$1$2}');
+
+      return fixed;
+    });
+
+    // Filter out empty lines that were dangling edges
+    return fixedLines.filter((line) => line.trim() !== '').join('\n');
+  }, []);
+
   // Attempt to auto-correct common Mermaid syntax issues
-  function autoCorrectMermaid(raw: string): string {
-    let fixed = raw;
+  const autoCorrectMermaid = useCallback(
+    (raw: string): string => {
+      let fixed = raw;
 
-    // Replace <br/> and <br> with line breaks
-    fixed = fixed.replace(/<br\s*\/?>/gi, '\n');
+      // Replace <br/> and <br> with line breaks
+      fixed = fixed.replace(/<br\s*\/?>/gi, '\n');
 
-    // Replace smart quotes with regular quotes
-    fixed = fixed.replace(/[""]/g, '"').replace(/['']/g, "'");
+      // Replace smart quotes with regular quotes
+      fixed = fixed.replace(/[""]/g, '"').replace(/['']/g, "'");
 
-    // Remove trailing spaces on each line
-    fixed = fixed
-      .split('\n')
-      .map((line) => line.replace(/\s+$/, ''))
-      .join('\n');
+      // Remove trailing spaces on each line
+      fixed = fixed
+        .split('\n')
+        .map((line) => line.replace(/\s+$/, ''))
+        .join('\n');
 
-    // Remove zero-width spaces and non-breaking spaces
-    fixed = fixed.replace(/[\u200B\u00A0]/g, '');
+      // Remove zero-width spaces and non-breaking spaces
+      fixed = fixed.replace(/[\u200B\u00A0]/g, '');
 
-    // Remove HTML tags except for <b>, <i>, <u>
-    fixed = fixed.replace(/<(?!b|i|u)[^>]+>/gi, '');
+      // Remove HTML tags except for <b>, <i>, <u>
+      fixed = fixed.replace(/<(?!b|i|u)[^>]+>/gi, '');
 
-    // Remove leading/trailing blank lines and all surrounding whitespace
-    fixed = fixed.replace(/^\s*\n/gm, '').replace(/\n\s*$/gm, '');
-    fixed = fixed.trim();
+      // Remove leading/trailing blank lines and all surrounding whitespace
+      fixed = fixed.replace(/^\s*\n/gm, '').replace(/\n\s*$/gm, '');
+      fixed = fixed.trim();
 
-    return fixed;
-  }
+      // Fix incomplete node definitions - this is the critical fix for parse errors
+      fixed = fixIncompleteNodes(fixed);
+
+      // Fix incomplete edges and dangling connections
+      fixed = fixIncompleteEdges(fixed);
+
+      return fixed;
+    },
+    [fixIncompleteNodes, fixIncompleteEdges],
+  );
 
   useEffect(() => {
     let isMounted = true;
@@ -85,7 +178,7 @@ const MermaidBlock: React.FC<MermaidBlockProps> = ({ code, className }) => {
     return () => {
       isMounted = false;
     };
-  }, [code, getMermaid]);
+  }, [code, getMermaid, autoCorrectMermaid]);
 
   const [modalOpen, setModalOpen] = useState(false);
   const [zoom, setZoom] = useState(1);
